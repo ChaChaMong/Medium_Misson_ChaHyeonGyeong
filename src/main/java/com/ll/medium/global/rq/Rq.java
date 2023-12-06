@@ -61,6 +61,25 @@ public class Rq {
         return "redirect:" + path + "?msg=" + msg;
     }
 
+    public boolean isLogined() {
+        return user != null;
+    }
+
+    private String getMemberUsername() {
+        return user.getUsername();
+    }
+
+    public Member getMember() {
+        if (!isLogined()) {
+            return null;
+        }
+
+        if (member == null)
+            member = memberService.findByUsername(getMemberUsername()).get();
+
+        return member;
+    }
+
     public String historyBack(RsData<?> rs) {
         return historyBack(rs.getMsg());
     }

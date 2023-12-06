@@ -19,10 +19,10 @@
 <!--                <li th:if="${@rq.admin}"><a href="/adm"><i class="fa-solid fa-gauge-high"></i> 관리자</a></li>-->
 <!--                <li><a href="/article/list"><i class="fa-solid fa-list"></i> 게시물 목록</a></li>-->
 <!--                <li th:if="${@rq.logined}"><a href="/article/write"><i class="fa-solid fa-pen"></i> 게시물 작성</a></li>-->
-<!--                <li th:unless="${@rq.logined}"><a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i>-->
-<!--                    로그인</a>-->
-<!--                </li>-->
-<!--                <li th:unless="${@rq.logined}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a>-->
+                <li th:unless="${@rq.isLogined()}"><a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i>
+                    로그인</a>
+                </li>
+                <li th:unless="${@rq.isLogined()}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a>
 <!--                </li>-->
 <!--                <li th:if="${@rq.logined}"><a href="/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>-->
 <!--                <li th:if="${@rq.logined}">-->
@@ -35,9 +35,9 @@
         <a href="/" class="btn btn-ghost text-xl">MEDIUM</a>
     </div>
     <div class="navbar-end">
-<!--        <a th:if="${@rq.isLogined}" href="/member/me" class="btn btn-ghost text-xl">-->
-<!--            <span th:text="|welcome ${@rq.member.username}|"></span>-->
-<!--        </a>-->
+        <a th:if="${@rq.isLogined()}" href="/member/me" class="btn btn-ghost text-xl">
+            <span th:text="|welcome ${@rq.getMember().getUsername()}|"></span>
+        </a>
     </div>
 </header>
 </body>

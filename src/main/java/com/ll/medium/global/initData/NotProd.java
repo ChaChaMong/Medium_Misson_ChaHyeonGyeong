@@ -31,8 +31,8 @@ public class NotProd {
     public void work1() {
         if (memberService.count() > 0) return;
 
+        Member member3 = memberService.join("admin", "1234").getData();
         Member member1 = memberService.join("user1", "1234").getData();
         Member member2 = memberService.join("user2", "1234").getData();
-        Member member3 = memberService.join("user3", "1234").getData();
     }
 }
