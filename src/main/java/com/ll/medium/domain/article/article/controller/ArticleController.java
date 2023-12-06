@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class ArticleController {
         return "domain/article/article/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/article/write")
     String showWrite() {
         return "domain/article/article/write";
@@ -41,6 +43,7 @@ public class ArticleController {
         private String body;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/article/write")
     String write(@Valid WriteForm writeForm){
         Article article = articleService.write(rq.getMember(), writeForm.title, writeForm.body);
