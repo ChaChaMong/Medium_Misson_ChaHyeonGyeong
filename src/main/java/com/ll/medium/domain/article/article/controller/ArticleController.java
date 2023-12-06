@@ -21,6 +21,14 @@ public class ArticleController {
     private final ArticleService articleService;
     private final Rq rq;
 
+    @GetMapping("/article/latest")
+    String showLatestPosts(Model model) {
+        List<Article> articles = articleService.findLatestPosts(30);
+        model.addAttribute("articles", articles);
+
+        return "domain/home/home/main";
+    }
+
     @GetMapping("/article/list")
     String showList(Model model) {
         List<Article> articles = articleService.findAll();

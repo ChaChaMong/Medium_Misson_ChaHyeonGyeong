@@ -11,7 +11,7 @@ public class HomeController {
     private final Rq rq;
 
     @GetMapping("/")
-    public String goToArticleList(String msg) {
-        return rq.redirect("/article/list", msg);
+    public String goToLatestPosts(String msg) {
+        return rq.redirect("/article/latest", msg);
     }
 }
