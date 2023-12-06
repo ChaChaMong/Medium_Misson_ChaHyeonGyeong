@@ -21,7 +21,7 @@ public class ArticleController {
     private final ArticleService articleService;
     private final Rq rq;
 
-    @GetMapping("/article/latest")
+    @GetMapping("/post/latest")
     String showLatestPosts(Model model) {
         List<Article> articles = articleService.findLatestPosts(30);
         model.addAttribute("articles", articles);
@@ -29,7 +29,7 @@ public class ArticleController {
         return "domain/home/home/main";
     }
 
-    @GetMapping("/article/list")
+    @GetMapping("/post/list")
     String showList(Model model) {
         List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
@@ -38,7 +38,7 @@ public class ArticleController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/article/write")
+    @GetMapping("/post/write")
     String showWrite() {
         return "domain/article/article/write";
     }
@@ -52,7 +52,7 @@ public class ArticleController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/article/write")
+    @PostMapping("/post/write")
     String write(@Valid WriteForm writeForm){
         Article article = articleService.write(rq.getMember(), writeForm.title, writeForm.body);
 

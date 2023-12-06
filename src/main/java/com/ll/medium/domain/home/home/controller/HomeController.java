@@ -12,6 +12,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String goToLatestPosts(String msg) {
-        return rq.redirect("/article/latest", msg);
+        return rq.redirect("/post/latest", msg);
     }
 }
