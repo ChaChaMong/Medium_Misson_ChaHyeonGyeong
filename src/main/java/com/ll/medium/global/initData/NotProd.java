@@ -31,8 +31,25 @@ public class NotProd {
     public void work1() {
         if (memberService.count() > 0) return;
 
-        Member member3 = memberService.join("admin", "1234").getData();
+        Member admin = memberService.join("admin", "1234").getData();
         Member member1 = memberService.join("user1", "1234").getData();
         Member member2 = memberService.join("user2", "1234").getData();
+
+
+//        IntStream.rangeClosed(1, 20).forEach(
+//                i -> {
+//                    String title = "제목" + i;
+//                    String body = "내용" + i;
+//                    articleService.write(member1.getId(), title, body);
+//                }
+//        );
+//
+//        IntStream.rangeClosed(21, 40).forEach(
+//                i -> {
+//                    String title = "제목" + i;
+//                    String body = "내용" + i;
+//                    articleService.write(member2.getId(), title, body);
+//                }
+//        );
     }
 }
