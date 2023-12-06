@@ -20,5 +20,5 @@ public class Article extends BaseEntity {
     @ManyToOne
     private Member author;
     private String title;
-    private String content;
+    private String body;
 }

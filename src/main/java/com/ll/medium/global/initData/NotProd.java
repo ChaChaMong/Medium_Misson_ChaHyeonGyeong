@@ -1,5 +1,6 @@
 package com.ll.medium.global.initData;
 
+import com.ll.medium.domain.article.article.service.ArticleService;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.IntStream;
+
 @Profile("!prod")
 @Configuration
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class NotProd {
     @Lazy
     private NotProd self;
     private final MemberService memberService;
+    private final ArticleService articleService;
 
     @Bean
     public ApplicationRunner initNotProdData() {
@@ -35,21 +39,20 @@ public class NotProd {
         Member member1 = memberService.join("user1", "1234").getData();
         Member member2 = memberService.join("user2", "1234").getData();
 
+        IntStream.rangeClosed(1, 20).forEach(
+                i -> {
+                    String title = "제목" + i;
+                    String body = "내용" + i;
+                    articleService.write(member1, title, body);
+                }
+        );
 
-//        IntStream.rangeClosed(1, 20).forEach(
-//                i -> {
-//                    String title = "제목" + i;
-//                    String body = "내용" + i;
-//                    articleService.write(member1.getId(), title, body);
-//                }
-//        );
-//
-//        IntStream.rangeClosed(21, 40).forEach(
-//                i -> {
-//                    String title = "제목" + i;
-//                    String body = "내용" + i;
-//                    articleService.write(member2.getId(), title, body);
-//                }
-//        );
+        IntStream.rangeClosed(21, 40).forEach(
+                i -> {
+                    String title = "제목" + i;
+                    String body = "내용" + i;
+                    articleService.write(member2, title, body);
+                }
+        );
     }
 }
