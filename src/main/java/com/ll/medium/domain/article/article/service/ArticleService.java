@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,10 @@ public class ArticleService {
 
     public List<Article> findByAuthorIdOrderByIdDesc(long authorId) {
         return articleRepository.findByAuthorIdOrderByIdDesc(authorId);
+    }
+
+    public Optional<Article> findById(long id) {
+        return articleRepository.findById(id);
     }
 
     public Article write(Member author, String title, String body, boolean isPublished) {

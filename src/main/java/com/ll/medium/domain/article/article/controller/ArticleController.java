@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -44,6 +45,15 @@ public class ArticleController {
         model.addAttribute("articles", articles);
 
         return "domain/article/article/myList";
+    }
+
+    @GetMapping("/post/{id}")
+    String showDetail(Model model, @PathVariable long id) {
+        Article article = articleService.findById(id).get();
+
+        model.addAttribute("article", article);
+
+        return "domain/article/article/detail";
     }
 
     @PreAuthorize("isAuthenticated()")

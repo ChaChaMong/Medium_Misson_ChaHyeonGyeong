@@ -10,7 +10,7 @@
 
     <ul class="mt-2" th:if="${articles.size()} > 0">
         <li th:each="article : ${articles}">
-            <a class="link" th:href="|/article/detail/${article.id}|">
+            <a class="link" th:href="|/post/${article.id}|">
                 <th:block th:text="|${article.id}번 : ${article.title}|"></th:block>
                 <th:block th:text="|by ${article.author.username}|"></th:block>
             </a>
