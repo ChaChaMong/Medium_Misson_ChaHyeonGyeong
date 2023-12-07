@@ -29,6 +29,10 @@ public class ArticleService {
         return articleRepository.findByIsPublishedOrderByIdDesc(isPublished);
     }
 
+    public List<Article> findByAuthorIdOrderByIdDesc(long authorId) {
+        return articleRepository.findByAuthorIdOrderByIdDesc(authorId);
+    }
+
     public Article write(Member author, String title, String body, boolean isPublished) {
         Article article = Article.builder()
                 .author(author)
@@ -39,5 +43,4 @@ public class ArticleService {
         articleRepository.save(article);
         return article;
     }
-
 }

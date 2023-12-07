@@ -38,6 +38,15 @@ public class ArticleController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/post/myList")
+    String showMyList(Model model) {
+        List<Article> articles = articleService.findByAuthorIdOrderByIdDesc(rq.getMember().getId());
+        model.addAttribute("articles", articles);
+
+        return "domain/article/article/myList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/write")
     String showWrite() {
         return "domain/article/article/write";
