@@ -8,14 +8,32 @@
 
     <h1 class="font-bold mb-2"><i class="fa-solid fa-list"></i> 내 글 리스트</h1>
 
-    <ul class="mt-2" th:if="${articles.size()} > 0">
-        <li th:each="article : ${articles}">
-            <a class="link" th:href="|/post/${article.id}|">
-                <th:block th:text="|${article.id}번 : ${article.title}|"></th:block>
-                <th:block th:text="|by ${article.author.username}|"></th:block>
-            </a>
-        </li>
-    </ul>
+    <div class="overflow-x-auto">
+        <table class="table">
+            <!-- head -->
+            <thead>
+            <tr>
+                <th></th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th class="text-center">공개 글</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- row 1 -->
+            <tr class="hover" th:each="article : ${articles}" th:onclick="|location.href='/post/${article.id}'|">
+                <th><span th:text="${article.id}"></span></th>
+                <td><span th:text="${article.title}"></span></td>
+                <td><span th:text="${article.author.username}"></span></td>
+                <td class="text-center">
+                    <label>
+                        <input type="checkbox" class="checkbox" disabled th:checked="${article.published}"/>
+                    </label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 
