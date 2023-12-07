@@ -39,11 +39,19 @@ public class NotProd {
         Member member1 = memberService.join("user1", "1234").getData();
         Member member2 = memberService.join("user2", "1234").getData();
 
-        IntStream.rangeClosed(1, 20).forEach(
+        IntStream.rangeClosed(1, 10).forEach(
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    articleService.write(member1, title, body);
+                    articleService.write(member1, title, body, true);
+                }
+        );
+
+        IntStream.rangeClosed(11, 20).forEach(
+                i -> {
+                    String title = "제목" + i;
+                    String body = "내용" + i;
+                    articleService.write(member1, title, body, false);
                 }
         );
 
@@ -51,7 +59,7 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    articleService.write(member2, title, body);
+                    articleService.write(member2, title, body, true);
                 }
         );
     }

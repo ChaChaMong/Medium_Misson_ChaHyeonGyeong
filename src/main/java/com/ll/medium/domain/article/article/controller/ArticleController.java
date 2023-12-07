@@ -49,12 +49,17 @@ public class ArticleController {
         private String title;
         @NotBlank
         private String body;
+        private String isPublished;
+
+        private boolean getIsPublished() {
+            return "true".equals(isPublished);
+        }
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/post/write")
     String write(@Valid WriteForm writeForm){
-        Article article = articleService.write(rq.getMember(), writeForm.title, writeForm.body);
+        Article article = articleService.write(rq.getMember(), writeForm.title, writeForm.body, writeForm.getIsPublished());
 
         return rq.redirect("/", "%d번 게시물 생성되었습니다.".formatted(article.getId()));
     }

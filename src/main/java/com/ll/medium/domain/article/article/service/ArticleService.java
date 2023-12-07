@@ -25,11 +25,12 @@ public class ArticleService {
         return articleRepository.findAllByOrderByIdDesc(pageRequest);
     }
 
-    public Article write(Member author, String title, String body) {
+    public Article write(Member author, String title, String body, boolean isPublished) {
         Article article = Article.builder()
                 .author(author)
                 .title(title)
                 .body(body)
+                .isPublished(isPublished)
                 .build();
         articleRepository.save(article);
         return article;
