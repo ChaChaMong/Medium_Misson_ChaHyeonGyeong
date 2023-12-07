@@ -5,6 +5,7 @@ import com.ll.medium.domain.article.article.repository.ArticleRepository;
 import com.ll.medium.domain.member.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,14 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public List<Article> findByIsPublishedOrderByIdDesc(boolean isPublished, int count) {
-        PageRequest pageRequest = PageRequest.of(0, count);
+    public List<Article> findAllByOrderByIdDesc(int count) {
+        Pageable pageable = PageRequest.of(0, count);
 
-        return articleRepository.findByIsPublishedOrderByIdDesc(isPublished, pageRequest);
+        return articleRepository.findAllByOrderByIdDesc(pageable);
+    }
+
+    public List<Article> findByIsPublishedOrderByIdDesc(boolean isPublished) {
+        return articleRepository.findByIsPublishedOrderByIdDesc(isPublished);
     }
 
     public Article write(Member author, String title, String body, boolean isPublished) {

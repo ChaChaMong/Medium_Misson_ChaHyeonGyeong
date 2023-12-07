@@ -23,7 +23,7 @@ public class ArticleController {
 
     @GetMapping("/post/latest")
     String showLatestPosts(Model model) {
-        List<Article> articles = articleService.findByIsPublishedOrderByIdDesc(true, 30);
+        List<Article> articles = articleService.findAllByOrderByIdDesc(30);
         model.addAttribute("articles", articles);
 
         return "domain/home/home/main";
@@ -31,7 +31,7 @@ public class ArticleController {
 
     @GetMapping("/post/list")
     String showList(Model model) {
-        List<Article> articles = articleService.findAll();
+        List<Article> articles = articleService.findByIsPublishedOrderByIdDesc(true);
         model.addAttribute("articles", articles);
 
         return "domain/article/article/list";

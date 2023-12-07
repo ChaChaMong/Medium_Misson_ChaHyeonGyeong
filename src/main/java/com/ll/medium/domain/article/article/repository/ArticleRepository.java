@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    List<Article> findByIsPublishedOrderByIdDesc(boolean isPublished, Pageable pageable);
+    List<Article> findAllByOrderByIdDesc(Pageable pageable);
+    List<Article> findByIsPublishedOrderByIdDesc(boolean isPublished);
 }
