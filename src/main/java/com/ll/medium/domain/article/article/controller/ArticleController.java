@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -81,5 +79,17 @@ public class ArticleController {
         Article article = articleService.write(rq.getMember(), writeForm.title, writeForm.body, writeForm.getIsPublished());
 
         return rq.redirect("/", "%d번 게시물 생성되었습니다.".formatted(article.getId()));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/post/{id}/delete")
+    String delete(@PathVariable long id) {
+        Article article = articleService.findById(id).get();
+
+        if (!articleService.canDelete(rq.getMember(), article)) throw new RuntimeException("삭제권한이 없습니다.");
+
+        articleService.delete(article);
+
+        return rq.redirect("/", "%d번 게시물 삭제되었습니다.".formatted(id));
     }
 }

@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
@@ -38,6 +40,7 @@ public class ArticleService {
         return articleRepository.findById(id);
     }
 
+    @Transactional
     public Article write(Member author, String title, String body, boolean isPublished) {
         Article article = Article.builder()
                 .author(author)
@@ -48,4 +51,18 @@ public class ArticleService {
         articleRepository.save(article);
         return article;
     }
+
+    public boolean canDelete(Member actor, Article article) {
+        if (actor == null) return false;
+
+        if (actor.isAdmin()) return true;
+
+        return article.getAuthor().equals(actor);
+    }
+
+    @Transactional
+    public void delete(Article article) {
+        articleRepository.delete(article);
+    }
+
 }
