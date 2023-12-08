@@ -1,6 +1,6 @@
 package com.ll.medium.global.initData;
 
-import com.ll.medium.domain.article.article.service.ArticleService;
+import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class NotProd {
     @Lazy
     private NotProd self;
     private final MemberService memberService;
-    private final ArticleService articleService;
+    private final PostService postService;
 
     @Bean
     public ApplicationRunner initNotProdData() {
@@ -43,7 +43,7 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    articleService.write(member1, title, body, true);
+                    postService.write(member1, title, body, true);
                 }
         );
 
@@ -51,7 +51,7 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    articleService.write(member1, title, body, false);
+                    postService.write(member1, title, body, false);
                 }
         );
 
@@ -59,7 +59,7 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    articleService.write(member2, title, body, true);
+                    postService.write(member2, title, body, true);
                 }
         );
     }

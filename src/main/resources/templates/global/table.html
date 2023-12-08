@@ -12,15 +12,15 @@
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr class="hover" style="cursor: pointer;" th:each="article : ${articles}" th:onclick="|location.href='/post/${article.id}'|">
+        <tr class="hover" style="cursor: pointer;" th:each="post : ${posts}" th:onclick="|location.href='/post/${post.id}'|">
             <td class="text-center">
-                <span th:class="${article.published ? 'badge badge-success' : 'badge badge-warning'}" th:text="${article.published ? '공개' : '비공개'}"></span>
+                <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}" th:text="${post.published ? '공개' : '비공개'}"></span>
             </td>
             <td>
-                <span class="badge badge-outline" th:text="${article.id}"></span>
-                <span style="word-break: break-all;" th:text="${article.title}"></span>
+                <span class="badge badge-outline" th:text="${post.id}"></span>
+                <span style="word-break: break-all;" th:text="${post.title}"></span>
             </td>
-            <td><span th:text="${article.author.username}"></span></td>
+            <td><span th:text="${post.author.username}"></span></td>
         </tr>
         </tbody>
     </table>

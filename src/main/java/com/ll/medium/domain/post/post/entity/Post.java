@@ -1,4 +1,4 @@
-package com.ll.medium.domain.article.article.entity;
+package com.ll.medium.domain.post.post.entity;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.global.jpa.BaseEntity;
@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class Article extends BaseEntity {
+public class Post extends BaseEntity {
     @ManyToOne
     private Member author;
     private String title;
