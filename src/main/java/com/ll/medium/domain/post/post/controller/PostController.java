@@ -70,7 +70,7 @@ public class PostController {
     String write(@Valid WriteForm writeForm){
         Post post = postService.write(rq.getMember(), writeForm.title, writeForm.body, writeForm.getIsPublished());
 
-        return rq.redirect("/", "%d번 게시물 생성되었습니다.".formatted(post.getId()));
+        return rq.redirect("/post/%d".formatted(post.getId()), "%d번 게시물 생성되었습니다.".formatted(post.getId()));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -107,7 +107,7 @@ public class PostController {
 
         postService.modify(post, modifyForm.title, modifyForm.body, modifyForm.getIsPublished());
 
-        return rq.redirect("/", "%d번 게시물 수정되었습니다.".formatted(id));
+        return rq.redirect("/post/%d".formatted(post.getId()), "%d번 게시물 수정되었습니다.".formatted(id));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -119,6 +119,6 @@ public class PostController {
 
         postService.delete(post);
 
-        return rq.redirect("/", "%d번 게시물 삭제되었습니다.".formatted(id));
+        return rq.redirect("/post/myList", "%d번 게시물 삭제되었습니다.".formatted(id));
     }
 }
