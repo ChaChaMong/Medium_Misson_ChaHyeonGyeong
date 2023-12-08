@@ -22,10 +22,8 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public List<Post> findAllByOrderByIdDesc(int count) {
-        Pageable pageable = PageRequest.of(0, count);
-
-        return postRepository.findAllByOrderByIdDesc(pageable);
+    public List<Post> findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
+        return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
     public List<Post> findByIsPublishedOrderByIdDesc(boolean isPublished) {

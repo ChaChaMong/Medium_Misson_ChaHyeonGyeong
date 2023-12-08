@@ -20,14 +20,6 @@ public class PostController {
     private final PostService postService;
     private final Rq rq;
 
-    @GetMapping("/post/latest")
-    String showLatestPosts(Model model) {
-        List<Post> posts = postService.findAllByOrderByIdDesc(30);
-        model.addAttribute("posts", posts);
-
-        return "domain/home/home/main";
-    }
-
     @GetMapping("/post/list")
     String showList(Model model) {
         List<Post> posts = postService.findByIsPublishedOrderByIdDesc(true);

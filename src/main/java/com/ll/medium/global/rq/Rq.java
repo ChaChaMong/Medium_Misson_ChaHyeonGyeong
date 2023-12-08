@@ -95,4 +95,8 @@ public class Rq {
         if (rs.isFail()) return historyBack(rs);
         return redirect(url, rs);
     }
+
+    public void setAttribute(String key, Object value) {
+        req.setAttribute(key, value);
+    }
 }
