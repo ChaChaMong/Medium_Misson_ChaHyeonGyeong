@@ -27,8 +27,8 @@
     <hr class="mt-2">
 
     <div class="mt-2 flex gap-2 justify-center">
-<!--        <a th:if="${@postService.canModify(@rq.getMember(), post)}" class="btn-link"-->
-<!--           th:href="|/post/modify/${post.id}|">글 수정</a>-->
+        <a th:if="${@postService.canModify(@rq.getMember(), post)}" class="btn btn-warning btn-sm"
+           th:href="|/post/${post.id}/modify|">글 수정</a>
         <a method="DELETE" th:if="${@postService.canDelete(@rq.getMember(), post)}" class="btn btn-error btn-sm"
            onclick="return confirm('정말로 삭제하시겠습니까?');" th:href="|/post/${post.id}/delete|">글 삭제</a>
     </div>

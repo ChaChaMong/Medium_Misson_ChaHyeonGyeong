@@ -82,6 +82,43 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/post/{id}/modify")
+    String showModify(Model model, @PathVariable long id){
+        Post post = postService.findById(id).get();
+
+        if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
+
+        model.addAttribute("post", post);
+
+        return "domain/post/post/modify";
+    }
+
+    @Data
+    public static class ModifyForm {
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String body;
+        private String isPublished;
+
+        private boolean getIsPublished() {
+            return "true".equals(isPublished);
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/post/{id}/modify")
+    String modify(@PathVariable long id, @Valid ModifyForm modifyForm){
+        Post post = postService.findById(id).get();
+
+        if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
+
+        postService.modify(post, modifyForm.title, modifyForm.body, modifyForm.getIsPublished());
+
+        return rq.redirect("/", "%d번 게시물 수정되었습니다.".formatted(id));
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/post/{id}/delete")
     String delete(@PathVariable long id) {
         Post post = postService.findById(id).get();

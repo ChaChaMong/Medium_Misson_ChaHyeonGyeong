@@ -52,12 +52,25 @@ public class PostService {
         return post;
     }
 
-    public boolean canDelete(Member actor, Post post) {
-        if (actor == null) return false;
+    public boolean canModify(Member author, Post post) {
+        if (author == null) return false;
 
-        if (actor.isAdmin()) return true;
+        return post.getAuthor().equals(author);
+    }
 
-        return post.getAuthor().equals(actor);
+    @Transactional
+    public void modify(Post post, String title, String body, boolean isPublished) {
+        post.setTitle(title);
+        post.setBody(body);
+        post.setPublished(isPublished);
+    }
+
+    public boolean canDelete(Member author, Post post) {
+        if (author == null) return false;
+
+        if (author.isAdmin()) return true;
+
+        return post.getAuthor().equals(author);
     }
 
     @Transactional
