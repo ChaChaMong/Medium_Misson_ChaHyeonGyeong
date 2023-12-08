@@ -1,11 +1,9 @@
 package com.ll.medium.domain.post.post.service;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
-import com.ll.medium.domain.member.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +44,7 @@ public class PostService {
                 .body(body)
                 .isPublished(isPublished)
                 .build();
+
         postRepository.save(post);
         return post;
     }
