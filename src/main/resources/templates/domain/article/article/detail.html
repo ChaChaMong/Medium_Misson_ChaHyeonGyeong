@@ -10,12 +10,19 @@
         <i class="fa-regular fa-newspaper"></i> 게시글 내용</h1>
     <hr>
 
-    <div class="mt-2">
-        <div class="badge badge-outline" th:text="${article.id}"></div>
-        <span th:text="${article.title}"></span>
+    <div class="px-4 py-10">
+        <div class="flex flex-col max-w-6xl mx-auto md:flex-row" >
+            <div class="w-full mr-8 md:w-1/3">
+                <div class="badge badge-outline" th:text="${article.id}"></div>
+                <p th:class="${article.published ? 'badge badge-success' : 'badge badge-warning'}" th:text="${article.published ? '공개' : '비공개'}"></p>
+                <h2 class="mt-2 text-3xl font-extrabold leading-9" th:text="${article.title}"></h2>
+                <p class="mt-4" th:text="|작성자 : ${article.author.username}|"></p>
+                <p class="mt-2" th:text="|등록 일시 : ${#temporals.format(article.createDate, 'yy.MM.dd HH:mm:ss')}|"></p>
+                <p class="mb-2" th:text="|수정 일시 : ${#temporals.format(article.modifyDate, 'yy.MM.dd HH:mm:ss')}|"></p>
+            </div>
+            <dl class="w-full md:w-2/3 whitespace-pre-line" th:text="${article.body}"></dl>
+        </div>
     </div>
-
-    <div class="mt-2 whitespace-pre-line" th:text="${article.body}"></div>
 
     <hr class="mt-2">
 
