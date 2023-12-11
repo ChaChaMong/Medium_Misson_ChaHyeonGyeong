@@ -24,7 +24,7 @@ public class PostController {
         List<Post> posts = postService.findByIsPublishedOrderByIdDesc(true);
         model.addAttribute("posts", posts);
 
-        return "domain/post/post/list";
+        return "domain/post/post/postList";
     }
 
     @PreAuthorize("isAuthenticated()")

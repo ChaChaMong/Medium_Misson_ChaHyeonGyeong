@@ -25,7 +25,7 @@ public class BlogController {
         model.addAttribute("username", username);
         model.addAttribute("posts", posts);
 
-        return "domain/post/blog/list";
+        return "domain/post/post/blogList";
     }
 
 }
