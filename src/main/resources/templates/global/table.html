@@ -12,8 +12,8 @@
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr class="hover" style="cursor: pointer;" th:each="post : ${posts}" th:onclick="|location.href='/post/${post.id}'|">
-            <td class="text-center">
+        <tr class="hover" style="cursor: pointer;" th:each="post : ${posts}" th:onclick="|location.href='@{${detailUrl}}/${post.id}'|">
+        <td class="text-center">
                 <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}" th:text="${post.published ? '공개' : '비공개'}"></span>
             </td>
             <td>

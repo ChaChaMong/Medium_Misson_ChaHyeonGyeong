@@ -24,8 +24,19 @@ public class BlogController {
         List<Post> posts = postService.findByAuthorIdOrderByIdDesc(member.getId());
         model.addAttribute("username", username);
         model.addAttribute("posts", posts);
+        model.addAttribute("detailUrl", "/b/%s".formatted(username));
 
         return "domain/post/post/blogList";
     }
+
+    @GetMapping("/b/{username}/{id}")
+    public String showDetail(Model model, @PathVariable String username, @PathVariable long id) {
+        Post post = postService.findById(id).get();
+
+        model.addAttribute("post", post);
+
+        return "domain/post/post/detail";
+    }
+
 
 }
