@@ -12,15 +12,18 @@
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr class="hover" style="cursor: pointer;" th:each="post : ${posts}" th:onclick="|location.href='@{${detailUrl}}/${post.id}'|">
-        <td class="text-center">
-                <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}" th:text="${post.published ? '공개' : '비공개'}"></span>
+        <tr class="hover" th:each="post : ${posts}" >
+            <td class="text-center">
+                <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}"
+                      th:text="${post.published ? '공개' : '비공개'}"></span>
             </td>
-            <td>
+            <td style="cursor: pointer;" th:onclick="|location.href='@{${detailUrl}}/${post.id}'|">
                 <span class="badge badge-outline" th:text="${post.id}"></span>
-                <span style="word-break: break-all;" th:text="${post.title}"></span>
+                <span style="word-break: break-all;" th:text="${post.title}" ></span>
             </td>
-            <td><span th:text="${post.author.username}"></span></td>
+            <td style="cursor: pointer;" th:onclick="|location.href='/b/@{${post.author.username}}'|">
+                <span th:text="${post.author.username}" ></span>
+            </td>
         </tr>
         </tbody>
     </table>
