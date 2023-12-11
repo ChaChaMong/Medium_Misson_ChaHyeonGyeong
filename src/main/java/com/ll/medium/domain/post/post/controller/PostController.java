@@ -33,7 +33,7 @@ public class PostController {
     public String showMyList(Model model) {
         List<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId());
         model.addAttribute("posts", posts);
-        model.addAttribute("mappingUrl", "'/post/${post.id}'");
+        model.addAttribute("detailUrl", "/post");
 
         return "domain/post/post/myList";
     }
