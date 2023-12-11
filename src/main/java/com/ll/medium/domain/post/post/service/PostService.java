@@ -75,4 +75,13 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    public boolean canAccess(Member author, Post post) {
+        if (post.isPublished()) return true;
+
+        if (author == null) return false;
+
+        if (author.isAdmin()) return true;
+
+        return post.getAuthor().equals(author);
+    }
 }

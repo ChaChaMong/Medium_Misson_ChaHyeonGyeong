@@ -4,6 +4,7 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.util.List;
 public class BlogController {
     private final PostService postService;
     private final MemberService memberService;
+    private final Rq rq;
 
     @GetMapping("/b/{username}")
     public String showListByUsername(Model model, @PathVariable String username) {
@@ -35,8 +37,8 @@ public class BlogController {
 
         model.addAttribute("post", post);
 
+        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
+
         return "domain/post/post/detail";
     }
-
-
 }

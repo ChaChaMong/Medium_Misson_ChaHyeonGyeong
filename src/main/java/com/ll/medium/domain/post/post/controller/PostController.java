@@ -44,6 +44,8 @@ public class PostController {
 
         model.addAttribute("post", post);
 
+        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
+
         return "domain/post/post/detail";
     }
 
