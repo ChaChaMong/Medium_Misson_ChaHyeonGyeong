@@ -36,7 +36,7 @@
         <a href="/" class="btn btn-ghost text-xl">MEDIUM</a>
     </div>
     <div class="navbar-end">
-        <a th:if="${@rq.isLogined()}" href="/member/me" class="btn btn-ghost text-xl">
+        <a th:if="${@rq.isLogined()}" class="btn btn-ghost text-xl">
             <span th:text="|welcome ${@rq.getMember().getUsername()}|"></span>
         </a>
     </div>
