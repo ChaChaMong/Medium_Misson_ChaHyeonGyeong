@@ -12,14 +12,20 @@
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr class="hover" th:each="post : ${posts}" >
+        <tr th:classappend="${post.published or @rq.getMember()==post.author} ? 'hover' : ''" th:each="post : ${posts}" >
             <td class="text-center">
                 <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}"
                       th:text="${post.published ? '공개' : '비공개'}"></span>
             </td>
-            <td style="cursor: pointer;" th:onclick="|location.href='@{${detailUrl}}/${post.id}'|">
-                <span class="badge badge-outline" th:text="${post.id}"></span>
-                <span style="word-break: break-all;" th:text="${post.title}" ></span>
+            <td>
+                <div style="cursor: pointer;" th:if="${post.published or @rq.getMember()==post.author}" th:onclick="|location.href='@{${detailUrl}}/${post.id}'|">
+                    <span class="badge badge-outline" th:text="${post.id}"></span>
+                    <span style="word-break: break-all;" th:text="${post.title}"></span>
+                </div>
+                <div th:if="${!post.published and @rq.getMember()!=post.author}">
+                    <span class="badge badge-outline" th:text="${post.id}"></span>
+                    <span style="word-break: break-all;" >비공개 게시물 입니다.</span>
+                </div>
             </td>
             <td style="cursor: pointer;" th:onclick="|location.href='/b/@{${post.author.username}}'|">
                 <span th:text="${post.author.username}" ></span>
