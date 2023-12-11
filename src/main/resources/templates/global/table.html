@@ -5,16 +5,17 @@
         <!-- head -->
         <thead>
         <tr>
-            <th class="text-center" style="width:90px"></th>
+            <th class="text-center"></th>
             <th>제목</th>
-            <th style="width:80px">작성자</th>
+            <th>작성자</th>
         </tr>
         </thead>
         <tbody>
         <!-- row 1 -->
         <tr th:classappend="${@postService.canAccess(@rq.getMember(), post)} ? 'hover' : ''" th:each="post : ${posts}" >
-            <td class="text-center">
-                <span th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}"
+            <td class="text-center" style="white-space: nowrap; width: 1%;">
+                <span style="font-size: 12px; font-weight: bold;"
+                      th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}"
                       th:text="${post.published ? '공개' : '비공개'}"></span>
             </td>
             <td>
@@ -28,7 +29,8 @@
                     <span style="word-break: break-all;" >비공개 게시물 입니다.</span>
                 </div>
             </td>
-            <td style="cursor: pointer;" th:onclick="|location.href='/b/@{${post.author.username}}'|">
+            <td style="cursor: pointer; white-space: nowrap; width: 1%;"
+                th:onclick="|location.href='/b/@{${post.author.username}}'|">
                 <span th:text="${post.author.username}" ></span>
             </td>
         </tr>
