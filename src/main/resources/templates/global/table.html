@@ -12,7 +12,7 @@
         </thead>
         <tbody>
         <!-- row 1 -->
-        <tr th:classappend="${@postService.canAccess(@rq.getMember(), post)} ? 'hover' : ''" th:each="post : ${posts}" >
+        <tr th:classappend="${@postService.canAccess(@rq.getMember(), post)} ? 'hover' : ''" th:each="post : ${paging}" >
             <td class="text-center" style="white-space: nowrap; width: 1%;">
                 <span style="font-size: 12px; font-weight: bold;"
                       th:class="${post.published ? 'badge badge-success' : 'badge badge-warning'}"

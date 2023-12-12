@@ -17,7 +17,7 @@ public class HomeController {
     @GetMapping("/")
     public String showMain(Model model) {
         List<Post> posts = postService.findTop30ByIsPublishedOrderByIdDesc(true);
-        model.addAttribute("posts", posts);
+        model.addAttribute("paging", posts);
         model.addAttribute("detailUrl", "/post");
 
         return "domain/home/home/main";

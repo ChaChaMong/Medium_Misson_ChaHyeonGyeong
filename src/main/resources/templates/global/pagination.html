@@ -1,0 +1,33 @@
+
+<div class="join w-full flex justify-center mt-1" th:if="${!paging.isEmpty()}">
+    <a class="join-item btn btn-sm"
+       th:href="@{|?page=${paging.number-1}|}" th:if="${paging.hasPrevious}">
+        <span>이전</span>
+    </a>
+
+    <a class="join-item btn btn-sm"
+       th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+       th:if="${page >= paging.number-3 and page <= paging.number+3}"
+       th:classappend="${page == paging.number} ? 'btn-active'"
+       th:text="${page + 1}" th:href="@{|?page=${page}|}">
+    </a>
+
+    <a class="join-item btn btn-sm"
+       th:href="@{|?page=${paging.number+1}|}" th:if="${paging.hasNext}">
+        <span>다음</span>
+    </a>
+</div>
+<!-- 게시글 page가 1개인 경우 -->
+<div class="join w-full flex justify-center mt-1" th:if="${paging.totalPages == 1}">
+    <a class="join-item btn btn-sm btn-rounded"
+       th:if="${paging.hasPrevious}"
+       th:href="@{|?page=${paging.number-1}|}">
+        <span>이전</span>
+    </a>
+
+    <a class="join-item btn btn-sm btn-rounded"
+       th:if="${paging.hasNext}"
+       th:href="@{|?page=${paging.number+1}|}">
+        <span>다음</span>
+    </a>
+</div>

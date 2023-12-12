@@ -6,12 +6,11 @@ import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,9 +19,9 @@ public class PostController {
     private final Rq rq;
 
     @GetMapping("/post/list")
-    public String showList(Model model) {
-        List<Post> posts = postService.findByIsPublishedOrderByIdDesc(true);
-        model.addAttribute("posts", posts);
+    public String showList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<Post> paging = this.postService.findByIsPublishedOrderByIdDesc(true, page);
+        model.addAttribute("paging", paging);
         model.addAttribute("detailUrl", "/post");
 
         return "domain/post/post/postList";
@@ -30,9 +29,9 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/myList")
-    public String showMyList(Model model) {
-        List<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId());
-        model.addAttribute("posts", posts);
+    public String showMyList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
+        model.addAttribute("paging", posts);
         model.addAttribute("detailUrl", "/post");
 
         return "domain/post/post/myList";

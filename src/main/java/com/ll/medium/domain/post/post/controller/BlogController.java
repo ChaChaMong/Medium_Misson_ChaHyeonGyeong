@@ -6,12 +6,12 @@ import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,18 +21,18 @@ public class BlogController {
     private final Rq rq;
 
     @GetMapping("/b/{username}")
-    public String showListByUsername(Model model, @PathVariable String username) {
+    public String showListByUsername(Model model, @PathVariable String username, @RequestParam(value="page", defaultValue="0") int page) {
         Member member = memberService.findByUsername(username).get();
-        List<Post> posts = postService.findByAuthorIdOrderByIdDesc(member.getId());
+        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(member.getId(), page);
         model.addAttribute("username", username);
-        model.addAttribute("posts", posts);
+        model.addAttribute("paging", posts);
         model.addAttribute("detailUrl", "/b/%s".formatted(username));
 
         return "domain/post/post/blogList";
     }
 
     @GetMapping("/b/{username}/{id}")
-    public String showDetail(Model model, @PathVariable String username, @PathVariable long id) {
+    public String showDetail(Model model, @PathVariable long id) {
         Post post = postService.findById(id).get();
 
         model.addAttribute("post", post);
