@@ -20,7 +20,7 @@ public class MemberService {
     @Transactional
     public RsData<Member> join(String username, String password) {
         if (findByUsername(username).isPresent()) {
-            return new RsData<>("F-1", "이미 사용중인 아이디입니다.");
+            return RsData.of("400", "이미 사용중인 아이디입니다.");
         }
 
         password = passwordEncoder.encode(password);
@@ -32,11 +32,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return new RsData<>(
-                "S-1",
-                "%s님 환영합니다.".formatted(member.getUsername()),
-                member
-        );
+        return RsData.of("200", "%s님 가입을 환영합니다.".formatted(member.getUsername()), member);
     }
 
     public Optional<Member> findByUsername(String username) {
