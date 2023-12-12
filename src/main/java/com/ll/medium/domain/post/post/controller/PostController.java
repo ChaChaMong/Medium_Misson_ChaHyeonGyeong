@@ -13,12 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/post")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
     private final Rq rq;
 
-    @GetMapping("/post/list")
+    @GetMapping("/list")
     public String showList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
         Page<Post> paging = this.postService.findByIsPublishedOrderByIdDesc(true, page);
         model.addAttribute("paging", paging);
@@ -28,7 +29,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/post/myList")
+    @GetMapping("/myList")
     public String showMyList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
         Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
         model.addAttribute("paging", posts);
@@ -37,7 +38,7 @@ public class PostController {
         return "domain/post/post/myList";
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/{id}")
     public String showDetail(Model model, @PathVariable long id) {
         Post post = postService.findById(id).get();
 
@@ -49,13 +50,13 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/post/write")
+    @GetMapping("/write")
     public String showWrite() {
         return "domain/post/post/write";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/post/write")
+    @PostMapping("/write")
     public String write(@Valid PostForm postForm){
         Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
@@ -63,7 +64,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/post/{id}/modify")
+    @GetMapping("/{id}/modify")
     public String showModify(Model model, @PathVariable long id){
         Post post = postService.findById(id).get();
 
@@ -75,7 +76,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/post/{id}/modify")
+    @PutMapping("/{id}/modify")
     public String modify(@PathVariable long id, @Valid PostForm postForm){
         Post post = postService.findById(id).get();
 
@@ -87,7 +88,7 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/post/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable long id) {
         Post post = postService.findById(id).get();
 
