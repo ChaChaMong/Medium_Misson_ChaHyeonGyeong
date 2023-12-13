@@ -19,6 +19,10 @@ public class RsData<T> {
         return new RsData<>(resultCode, msg, data, statusCode);
     }
 
+    public <T> RsData<T> of(T data) {
+        return RsData.of(resultCode, msg, data);
+    }
+
     public static <T> RsData<T> of(String resultCode, String msg) {
         return of(resultCode, msg, null);
     }

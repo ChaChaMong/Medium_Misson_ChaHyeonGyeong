@@ -4,6 +4,7 @@ import com.ll.medium.domain.post.post.dto.PostForm;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
+import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -58,9 +59,9 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String write(@Valid PostForm postForm){
-        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        RsData<Post> writeRs = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
-        return rq.redirect("/post/%d".formatted(post.getId()), "%d번 게시물 생성되었습니다.".formatted(post.getId()));
+        return rq.redirect("/post/%d".formatted(writeRs.getData().getId()), writeRs.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -82,9 +83,9 @@ public class PostController {
 
         if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
 
-        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        RsData<Post> modifyRs = postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
-        return rq.redirect("/post/%d".formatted(post.getId()), "%d번 게시물 수정되었습니다.".formatted(id));
+        return rq.redirect("/post/%d".formatted(modifyRs.getData().getId()), modifyRs.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -94,8 +95,8 @@ public class PostController {
 
         if (!postService.canDelete(rq.getMember(), post)) throw new RuntimeException("삭제권한이 없습니다.");
 
-        postService.delete(post);
+        RsData<Post> deleteRs = postService.delete(post);
 
-        return rq.redirect("/post/myList", "%d번 게시물 삭제되었습니다.".formatted(id));
+        return rq.redirect("/post/myList", deleteRs.getMsg());
     }
 }
