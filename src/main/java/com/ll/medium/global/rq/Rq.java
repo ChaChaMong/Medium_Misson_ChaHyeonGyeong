@@ -99,4 +99,12 @@ public class Rq {
     public void setAttribute(String key, Object value) {
         req.setAttribute(key, value);
     }
+
+    public Member getMemberDump() {
+        if (member == null) {
+            member = memberService.findById(1L).get();
+        }
+
+        return member;
+    }
 }

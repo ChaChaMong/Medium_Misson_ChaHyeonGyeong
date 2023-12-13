@@ -42,4 +42,8 @@ public class MemberService {
     public long count() {
         return memberRepository.count();
     }
+
+    public Optional<Member> findById(long id) {
+        return memberRepository.findById(id);
+    }
 }
