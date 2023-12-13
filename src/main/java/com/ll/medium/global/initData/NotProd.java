@@ -62,5 +62,13 @@ public class NotProd {
                     postService.write(member2, title, body, true);
                 }
         );
+
+        IntStream.rangeClosed(41, 50).forEach(
+                i -> {
+                    String title = "제목" + i;
+                    String body = "내용" + i;
+                    postService.write(admin, title, body, false);
+                }
+        );
     }
 }
