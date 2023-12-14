@@ -102,7 +102,10 @@ public class Rq {
 
     public Member getMemberDump() {
         if (member == null) {
-            member = memberService.findById(1L).get();
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user.getUsername();
+
+            member = memberService.findByUsername(user.getUsername()).get();
         }
 
         return member;
