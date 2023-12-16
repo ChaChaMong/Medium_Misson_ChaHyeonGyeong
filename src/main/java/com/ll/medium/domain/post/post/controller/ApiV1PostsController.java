@@ -104,7 +104,9 @@ public class ApiV1PostsController {
     public RsData<WritePostResponseBody> writePost(
             @Valid @RequestBody PostForm postForm
     ) {
-        RsData<Post> writeRs = postService.write(rq.getMemberDump(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+
+        RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
 
         return writeRs.of(
                 new WritePostResponseBody(
@@ -130,7 +132,9 @@ public class ApiV1PostsController {
     ) {
         Post post = postService.findById(id).get();
 
-        RsData<Post> modifyRs = postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+
+        RsData<Post> modifyRs = RsData.of("200", "%d번 게시글이 수정되었습니다.".formatted(post.getId()), post);
 
         return modifyRs.of(
                 new ModifyPostResponseBody(
@@ -163,7 +167,9 @@ public class ApiV1PostsController {
     ) {
         Post post = postService.findById(id).get();
 
-        RsData<Post> deleteRs =  postService.delete(post);
+        postService.delete(post);
+
+        RsData<Post> deleteRs = RsData.of("200", "%d번 게시글이 삭제되었습니다.".formatted(post.getId()), post);
 
         return deleteRs.of(
                 new DeletePostResponseBody(

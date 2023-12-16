@@ -61,7 +61,9 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String write(@Valid PostForm postForm){
-        RsData<Post> writeRs = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+
+        RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
 
         return rq.redirect("/post/%d".formatted(writeRs.getData().getId()), writeRs.getMsg());
     }
@@ -89,8 +91,9 @@ public class PostController {
             return rq.historyBack("수정권한이 없습니다.");
         }
 
+        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
-        RsData<Post> modifyRs = postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        RsData<Post> modifyRs = RsData.of("200", "%d번 게시글이 수정되었습니다.".formatted(post.getId()), post);
 
         return rq.redirect("/post/%d".formatted(modifyRs.getData().getId()), modifyRs.getMsg());
     }
@@ -104,7 +107,9 @@ public class PostController {
             return rq.historyBack("삭제권한이 없습니다.");
         }
 
-        RsData<Post> deleteRs = postService.delete(post);
+        postService.delete(post);
+
+        RsData<Post> deleteRs = RsData.of("200", "%d번 게시글이 삭제되었습니다.".formatted(post.getId()), post);
 
         return rq.redirect("/post/myList", deleteRs.getMsg());
     }

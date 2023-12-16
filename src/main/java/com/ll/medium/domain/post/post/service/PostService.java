@@ -3,7 +3,6 @@ package com.ll.medium.domain.post.post.service;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
-import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,7 +42,7 @@ public class PostService {
     }
 
     @Transactional
-    public RsData<Post> write(Member author, String title, String body, boolean isPublished) {
+    public Post write(Member author, String title, String body, boolean isPublished) {
         Post post = Post.builder()
                 .author(author)
                 .title(title)
@@ -52,7 +51,8 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
-        return RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
+
+        return post;
     }
 
     public boolean canModify(Member author, Post post) {
@@ -62,12 +62,10 @@ public class PostService {
     }
 
     @Transactional
-    public RsData<Post> modify(Post post, String title, String body, boolean isPublished) {
+    public void modify(Post post, String title, String body, boolean isPublished) {
         post.setTitle(title);
         post.setBody(body);
         post.setPublished(isPublished);
-
-        return RsData.of("200", "%d번 게시글이 수정되었습니다.".formatted(post.getId()), post);
     }
 
     public boolean canDelete(Member author, Post post) {
@@ -79,10 +77,8 @@ public class PostService {
     }
 
     @Transactional
-    public RsData<Post> delete(Post post) {
+    public void delete(Post post) {
         postRepository.delete(post);
-
-        return RsData.of("200", "%d번 게시글이 삭제되었습니다.".formatted(post.getId()), post);
     }
 
     public boolean canAccess(Member author, Post post) {
