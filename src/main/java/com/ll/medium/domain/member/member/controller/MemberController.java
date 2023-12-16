@@ -1,12 +1,11 @@
 package com.ll.medium.domain.member.member.controller;
 
+import com.ll.medium.domain.member.member.dto.MemberForm;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,18 +34,10 @@ public class MemberController {
         return "domain/member/member/join";
     }
 
-    @Data
-    public static class JoinForm {
-        @NotBlank
-        private String username;
-        @NotBlank
-        private String password;
-    }
-
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    String join(@Valid JoinForm joinForm){
-        RsData<Member> joinRs = memberService.join(joinForm.username, joinForm.password);
+    String join(@Valid MemberForm memberForm){
+        RsData<Member> joinRs = memberService.join(memberForm.getUsername(), memberForm.getPassword());
 
         return rq.redirectOrBack("/member/login", joinRs);
     }
