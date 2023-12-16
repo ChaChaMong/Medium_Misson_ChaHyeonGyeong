@@ -1,4 +1,4 @@
-package com.ll.medium.domain.post.post.controller;
+package com.ll.medium.domain.post.blog.controller;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
