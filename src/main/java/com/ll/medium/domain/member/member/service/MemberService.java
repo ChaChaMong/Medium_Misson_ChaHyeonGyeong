@@ -3,13 +3,15 @@ package com.ll.medium.domain.member.member.service;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.global.util.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +51,12 @@ public class MemberService {
     }
 
     public Optional<Member> findByApiKey(String apiKey) {
-        return memberRepository.findByApiKey(apiKey);
+        Claims claims = JwtUtil.decode(apiKey);
+
+        Map<String, String> data = (Map<String, String>) claims.get("data");
+        long id = Long.parseLong(data.get("id"));
+
+        return findById(id);
     }
 
     public Member checkUsernameAndPassword(String username, String password) {
@@ -64,10 +71,5 @@ public class MemberService {
         }
 
         return memberOp.get();
-    }
-
-    @Transactional
-    public void regenApiKey(Member member) {
-        member.setApiKey(UUID.randomUUID().toString());
     }
 }
