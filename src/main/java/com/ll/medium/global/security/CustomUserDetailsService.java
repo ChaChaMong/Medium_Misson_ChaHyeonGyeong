@@ -20,8 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberService.findByUsername(username).get();
 
-        return new User(
-                member.getId() + "",
+        return new SecurityUser(
+                member.getId(),
+                member.getUsername(),
                 member.getPassword(),
                 member.getAuthorities());
     }

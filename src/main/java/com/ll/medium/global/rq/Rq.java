@@ -3,6 +3,7 @@ package com.ll.medium.global.rq;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.global.security.SecurityUser;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -104,8 +105,8 @@ public class Rq {
 
     public Member getMemberApi() {
         if (member == null) {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            long memberId = Long.parseLong(user.getUsername());
+            SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            long memberId = user.getId();
 
             member = entityManager.getReference(Member.class, memberId); // new Member(memberId); 와 같다.
         }

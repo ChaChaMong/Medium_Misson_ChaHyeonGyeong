@@ -3,12 +3,12 @@ package com.ll.medium.domain.member.member.service;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.global.security.SecurityUser;
 import com.ll.medium.global.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,18 +54,21 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public User getUserFromApiKey(String apiKey) {
+    public SecurityUser getUserFromApiKey(String apiKey) {
         Claims claims = JwtUtil.decode(apiKey);
 
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
-        String id = (String) data.get("id");
+        long id = Long.parseLong((String) data.get("id"));
+        String username = (String) data.get("username");
         List<? extends GrantedAuthority> authorities = ((List<String>) data.get("authorities"))
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        return new User(
+        return new
+                SecurityUser(
                 id,
+                username,
                 "",
                 authorities
         );
