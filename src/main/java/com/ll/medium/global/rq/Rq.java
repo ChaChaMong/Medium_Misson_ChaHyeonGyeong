@@ -4,6 +4,7 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Rq {
     private final MemberService memberService;
     private User user;
     private Member member;
+    private final EntityManager entityManager;
 
     @PostConstruct
     public void init() {
@@ -100,12 +102,12 @@ public class Rq {
         req.setAttribute(key, value);
     }
 
-    public Member getMemberDump() {
+    public Member getMemberApi() {
         if (member == null) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             long memberId = Long.parseLong(user.getUsername());
 
-            member = memberService.findById(memberId).get();
+            member = entityManager.getReference(Member.class, memberId); // new Member(memberId); 와 같다.
         }
 
         return member;
