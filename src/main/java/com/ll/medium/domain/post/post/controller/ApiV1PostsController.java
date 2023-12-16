@@ -1,5 +1,7 @@
 package com.ll.medium.domain.post.post.controller;
 
+import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.PostForm;
 import com.ll.medium.domain.post.post.entity.Post;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiV1PostsController {
     private final PostService postService;
+    private final MemberService memberService;
     private final Rq rq;
 
     @Getter
@@ -35,8 +38,7 @@ public class ApiV1PostsController {
 
     @GetMapping("")
     public RsData<GetPostsResponseBody> getPosts(
-            @RequestParam(value="page",
-                    defaultValue="0") int page
+            @RequestParam(value="page", defaultValue="0") int page
     ) {
         return RsData.of(
                 "200",
@@ -50,8 +52,7 @@ public class ApiV1PostsController {
     //@PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
     public RsData<GetPostsResponseBody> getMyPosts(
-            @RequestParam(value="page",
-                    defaultValue="0") int page
+            @RequestParam(value="page", defaultValue="0") int page
     ) {
         return RsData.of(
                 "200",
@@ -104,6 +105,8 @@ public class ApiV1PostsController {
     public RsData<WritePostResponseBody> writePost(
             @Valid @RequestBody PostForm postForm
     ) {
+        Member member = rq.getMemberDump();
+
         Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
         RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
