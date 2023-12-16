@@ -26,14 +26,6 @@ public class Member extends BaseEntity {
         return username.equals("admin");
     }
 
-//    public List<SimpleGrantedAuthority> getAuthorities() {
-//        if (isAdmin()) {
-//            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_MEMBER"));
-//        }
-//
-//        return List.of(new SimpleGrantedAuthority("ROLE_MEMBER"));
-//    }
-
     public List<? extends GrantedAuthority> getAuthorities() {
         return getAuthoritiesAsStrList()
                 .stream()
@@ -42,6 +34,10 @@ public class Member extends BaseEntity {
     }
 
     public List<String> getAuthoritiesAsStrList() {
+        if (isAdmin()) {
+            return List.of("ROLE_ADMIN", "ROLE_MEMBER");
+        }
+
         return List.of("ROLE_MEMBER");
     }
 }
