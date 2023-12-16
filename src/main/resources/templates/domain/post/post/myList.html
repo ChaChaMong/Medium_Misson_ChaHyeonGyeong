@@ -1,0 +1,16 @@
+<html layout:decorate="~{global/layout}">
+<head>
+    <title>내 글 목록</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+
+    <h1 class="font-bold mb-2"><i class="fa-solid fa-clipboard-list"></i> 내 글 목록</h1>
+
+    <div th:include="global/table.html"></div>
+    <div th:include="global/pagination.html"></div>
+</div>
+</body>
+
+</html>
