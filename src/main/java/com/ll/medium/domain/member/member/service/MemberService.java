@@ -50,4 +50,18 @@ public class MemberService {
     public Optional<Member> findByApiKey(String apiKey) {
         return memberRepository.findByApiKey(apiKey);
     }
+
+    public Member checkUsernameAndPassword(String username, String password) {
+        Optional<Member> memberOp = findByUsername(username);
+
+        if (memberOp.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+        }
+
+        if (!passwordEncoder.matches(password, memberOp.get().getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return memberOp.get();
+    }
 }

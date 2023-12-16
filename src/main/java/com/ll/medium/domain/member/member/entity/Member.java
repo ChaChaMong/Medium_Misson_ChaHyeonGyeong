@@ -23,7 +23,7 @@ public class Member extends BaseEntity {
     private String username;
     private String password;
     @Column(unique = true)
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private String apiKey;
 
     public boolean isAdmin() {
