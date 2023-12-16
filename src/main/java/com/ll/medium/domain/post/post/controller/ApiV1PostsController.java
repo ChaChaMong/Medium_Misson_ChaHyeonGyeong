@@ -56,7 +56,7 @@ public class ApiV1PostsController {
                 "200",
                 "성공",
                 new GetPostsResponseBody(
-                        postService.findByAuthorIdOrderByIdDesc(rq.getMemberApi().getId(), page)
+                        postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page)
                 )
         );
     }
@@ -103,7 +103,7 @@ public class ApiV1PostsController {
     public RsData<WritePostResponseBody> writePost(
             @Valid @RequestBody PostForm postForm
     ) {
-        Post post = postService.write(rq.getMemberApi(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
         RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
 

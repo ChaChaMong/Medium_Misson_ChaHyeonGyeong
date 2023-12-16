@@ -18,15 +18,15 @@
                 class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
 <!--                <li th:if="${@rq.admin}"><a href="/adm"><i class="fa-solid fa-gauge-high"></i> 관리자</a></li>-->
                 <li><a href="/post/list"><i class="fa-solid fa-list"></i> 게시물 목록</a></li>
-                <li th:if="${@rq.logined}"><a href="/post/myList"><i class="fa-solid fa-clipboard-list"></i> 내 글 목록</a></li>
-                <li th:if="${@rq.logined}"><a href="/post/write"><i class="fa-solid fa-pen"></i> 게시물 작성</a></li>
-                <li th:unless="${@rq.isLogined()}"><a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i>
+                <li th:if="${@rq.isLogin()}"><a href="/post/myList"><i class="fa-solid fa-clipboard-list"></i> 내 글 목록</a></li>
+                <li th:if="${@rq.isLogin()}"><a href="/post/write"><i class="fa-solid fa-pen"></i> 게시물 작성</a></li>
+                <li th:unless="${@rq.isLogin()}"><a href="/member/login"><i class="fa-solid fa-right-to-bracket"></i>
                     로그인</a>
                 </li>
-                <li th:unless="${@rq.isLogined()}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a>
+                <li th:unless="${@rq.isLogin()}"><a href="/member/join"><i class="fa-solid fa-user-plus"></i> 회원가입</a>
 <!--                </li>-->
 <!--                <li th:if="${@rq.logined}"><a href="/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>-->
-                <li th:if="${@rq.isLogined()}">
+                <li th:if="${@rq.isLogin()}">
                     <a href="/member/logout" method="POST"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
                 </li>
             </ul>
@@ -36,7 +36,7 @@
         <a href="/" class="btn btn-ghost text-xl">MEDIUM</a>
     </div>
     <div class="navbar-end">
-        <a th:if="${@rq.isLogined()}" class="btn btn-ghost text-xl">
+        <a th:if="${@rq.isLogin()}" class="btn btn-ghost text-xl">
             <span th:text="|welcome ${@rq.getMember().getUsername()}|"></span>
         </a>
     </div>
