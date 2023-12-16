@@ -45,7 +45,9 @@ public class PostController {
 
         model.addAttribute("post", post);
 
-        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
+        if (!postService.canAccess(rq.getMember(), post)) {
+            return rq.historyBack("조회권한이 없습니다.");
+        }
 
         return "domain/post/post/detail";
     }
@@ -69,7 +71,9 @@ public class PostController {
     public String showModify(Model model, @PathVariable long id){
         Post post = postService.findById(id).get();
 
-        if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
+        if (!postService.canModify(rq.getMember(), post)) {
+            return rq.historyBack("수정권한이 없습니다.");
+        }
 
         model.addAttribute("post", post);
 
@@ -81,7 +85,10 @@ public class PostController {
     public String modify(@PathVariable long id, @Valid PostForm postForm){
         Post post = postService.findById(id).get();
 
-        if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
+        if (!postService.canModify(rq.getMember(), post)) {
+            return rq.historyBack("수정권한이 없습니다.");
+        }
+
 
         RsData<Post> modifyRs = postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
 
@@ -93,7 +100,9 @@ public class PostController {
     public String delete(@PathVariable long id) {
         Post post = postService.findById(id).get();
 
-        if (!postService.canDelete(rq.getMember(), post)) throw new RuntimeException("삭제권한이 없습니다.");
+        if (!postService.canDelete(rq.getMember(), post)) {
+            return rq.historyBack("삭제권한이 없습니다.");
+        }
 
         RsData<Post> deleteRs = postService.delete(post);
 

@@ -34,12 +34,17 @@ public class BlogController {
     }
 
     @GetMapping("/{username}/{id}")
-    public String showDetail(Model model, @PathVariable long id) {
+    public String showDetail(
+            Model model,
+            @PathVariable long id
+    ) {
         Post post = postService.findById(id).get();
 
         model.addAttribute("post", post);
 
-        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
+        if (!postService.canAccess(rq.getMember(), post)) {
+            return rq.historyBack("조회권한이 없습니다.");
+        }
 
         return "domain/post/post/detail";
     }
