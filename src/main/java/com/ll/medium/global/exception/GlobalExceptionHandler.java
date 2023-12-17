@@ -1,0 +1,31 @@
+package com.ll.medium.global.exception;
+
+import com.ll.medium.global.rsData.RsData;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<RsData<Object>> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(RsData.of(
+                        "404",
+                        e.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<RsData<Object>> handleAccessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(RsData.of(
+                        "403",
+                        e.getMessage(),
+                        null
+                ));
+    }
+}
