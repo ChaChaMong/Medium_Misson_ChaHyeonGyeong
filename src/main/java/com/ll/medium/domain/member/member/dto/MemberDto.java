@@ -1,5 +1,6 @@
-package com.ll.medium.domain.member.member.entity;
+package com.ll.medium.domain.member.member.dto;
 
+import com.ll.medium.domain.member.member.entity.Member;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
