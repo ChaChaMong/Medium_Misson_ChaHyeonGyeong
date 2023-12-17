@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -47,7 +48,7 @@ public class ApiV1PostsController {
         );
     }
 
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
     public RsData<GetPostsResponseBody> getMyPosts(
             @RequestParam(value="page", defaultValue="0") int page
@@ -74,6 +75,24 @@ public class ApiV1PostsController {
     public RsData<GetPostResponseBody> getPost(
             @PathVariable long id
     ) {
+        Optional<Post> postOptional = postService.findById(id);
+
+        if (!postOptional.isPresent()) {
+            return RsData.of(
+                "404",
+                "해당 게시물을 찾을 수 없습니다.",
+                null
+            );
+        }
+
+        if (!postService.canAccess(rq.getMember(), postOptional.get())) {
+            return RsData.of(
+                    "403",
+                    "조회권한이 없습니다.",
+                    null
+            );
+        }
+
         return RsData.of(
                 "200",
                 "성공",
@@ -81,12 +100,6 @@ public class ApiV1PostsController {
                         postService.findById(id).get()
                 )
         );
-
-//        Post post = postService.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-//
-//        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
-//
-//        return post;
     }
 
     @Getter
