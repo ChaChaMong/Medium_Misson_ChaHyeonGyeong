@@ -80,8 +80,8 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1")
-    void t2() throws Exception {
+    @DisplayName("GET /api/v1/posts/1 - 공개 게시글 비로그인")
+    void t2_1() throws Exception {
         //When
         ResultActions resultActions = mvc
                 .perform(get("/api/v1/posts/1"))
@@ -92,6 +92,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
+                .andExpect(status().isOk())  // HTTP 상태 코드가 200인지 확인합니다.
                 .andExpect(jsonPath("$.data.item.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.item.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.item.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -100,6 +101,83 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.item.title", notNullValue()))
                 .andExpect(jsonPath("$.data.item.body", notNullValue()))
                 .andExpect(jsonPath("$.data.item.published", instanceOf(Boolean.class)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1 - 비공개 게시글 로그인")
+    @WithUserDetails("user1")
+    void t2_2() throws Exception {
+        //When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPost"))
+                .andExpect(status().isOk())  // HTTP 상태 코드가 200인지 확인합니다.
+                .andExpect(jsonPath("$.data.item.id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.item.createDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.item.modifyDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.item.authorId", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.item.authorName", notNullValue()))
+                .andExpect(jsonPath("$.data.item.title", notNullValue()))
+                .andExpect(jsonPath("$.data.item.body", notNullValue()))
+                .andExpect(jsonPath("$.data.item.published", instanceOf(Boolean.class)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1000 - 게시물을 찾을 수 없음")
+    void t2_3() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1000"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPost"))
+                .andExpect(jsonPath("$.resultCode", is("404")))  // resultCode가 "404"인지 확인합니다.
+                .andExpect(jsonPath("$.msg", is("해당 게시물을 찾을 수 없습니다.")));  // 메시지가 올바른지 확인합니다.
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/20 - 조회권한이 없음 (비로그인)")
+    void t2_4() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/20"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPost"))
+                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.msg", is("조회권한이 없습니다.")));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/20 - 조회권한이 없음 (로그인)")
+    @WithUserDetails("user2")
+    void t2_5() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/20"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPost"))
+                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.msg", is("조회권한이 없습니다.")));
     }
 
     @Test
