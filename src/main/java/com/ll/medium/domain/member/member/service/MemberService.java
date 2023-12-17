@@ -74,17 +74,29 @@ public class MemberService {
         );
     }
 
-    public Member checkUsernameAndPassword(String username, String password) {
-        Optional<Member> memberOp = findByUsername(username);
+//    public boolean checkUsername(String username) {
+//        Optional<Member> memberOp = findByUsername(username);
+//
+//        if (memberOp.isEmpty()) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
+//
+//
+//    public boolean checkPassword(String username, String password) {
+//        Optional<Member> memberOp = findByUsername(username);
+//
+//        if (!passwordEncoder.matches(password, memberOp.get().getPassword())) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
-        if (memberOp.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 회원입니다.");
-        }
+    public boolean checkUsernameAndPassword(Optional<Member> memberOp, String username, String password) {
 
-        if (!passwordEncoder.matches(password, memberOp.get().getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-
-        return memberOp.get();
+        return memberOp.isPresent() && passwordEncoder.matches(password, memberOp.get().getPassword());
     }
 }

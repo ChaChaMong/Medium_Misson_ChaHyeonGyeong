@@ -1,19 +1,22 @@
 package com.ll.medium.domain.member.member.controller;
 
+import com.ll.medium.domain.member.member.dto.LoginResponseDto;
+import com.ll.medium.domain.member.member.dto.MemberForm;
 import com.ll.medium.domain.member.member.entity.Member;
-import com.ll.medium.domain.member.member.dto.MemberDto;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.util.jwt.JwtUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -21,34 +24,17 @@ import java.util.Map;
 public class ApiV1MembersController {
     private final MemberService memberService;
 
-    @Getter
-    @Setter
-    public static class LoginRequestBody {
-        private String username;
-        private String password;
-    }
-
-    @Getter
-    public static class LoginResponseBody {
-        private final MemberDto item;
-        private final String accessToken;
-
-        public LoginResponseBody(Member member, String accessToken) {
-            this.item = new MemberDto(member);
-            this.accessToken = accessToken;
-        }
-    }
-
     @PostMapping("/login")
-    public RsData<LoginResponseBody> login(
-            @RequestBody LoginRequestBody requestBody
+    public RsData<?> login(
+            @RequestBody MemberForm memberForm
     ) {
-        RsData<Member> checkRs = RsData.of("200", "id, pw check success", memberService.checkUsernameAndPassword(
-                requestBody.getUsername(),
-                requestBody.getPassword()
-        ));
+        Optional<Member> memberOp = memberService.findByUsername(memberForm.getUsername());
 
-        Member member = checkRs.getData();
+        if (!memberService.checkUsernameAndPassword(memberOp, memberForm.getUsername(), memberForm.getPassword())) {
+            throw new ResourceNotFoundException(ErrorMessage.LOGIN_FAIL.getMessage());
+        }
+
+        Member member = memberOp.get();
 
         Long id = member.getId();
         String accessToken = JwtUtil.encode(
@@ -61,8 +47,8 @@ public class ApiV1MembersController {
 
         return RsData.of(
                 "200",
-                "로그인 성공",
-                new LoginResponseBody(member, accessToken)
+                SuccessMessage.LOGIN_SUCCESS.getMessage(),
+                new LoginResponseDto(member, accessToken)
         );
     }
 }
