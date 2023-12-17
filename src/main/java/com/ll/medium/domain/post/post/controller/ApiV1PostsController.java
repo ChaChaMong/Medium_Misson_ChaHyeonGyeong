@@ -4,13 +4,15 @@ import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.PostForm;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +32,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                "전체 글 목록 조회 성공",
+                SuccessMessage.GET_POSTS_SUCCESS.getMessage(),
                 postDtos
         );
     }
@@ -43,21 +45,21 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                "나의 글 목록 조회 성공",
+                SuccessMessage.GET_MY_POSTS_SUCCESS.getMessage(),
                 postDtos
         );
     }
 
     @GetMapping("/{id}")
     public RsData<?> getPost(@PathVariable long id) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 게시물을 찾을 수 없습니다."));
-        if (!postService.canAccess(rq.getMember(), post)) throw new AccessDeniedException("조회권한이 없습니다.");
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());
 
         PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
-                "%d번 게시글이 조회되었습니다.".formatted(postDto.getId()),
+                SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -70,7 +72,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                "%d번 게시글이 작성되었습니다.".formatted(postDto.getId()),
+                SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -81,15 +83,15 @@ public class ApiV1PostsController {
             @PathVariable long id,
             @Valid @RequestBody PostForm postForm
     ) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 게시물을 찾을 수 없습니다."));
-        if (!postService.canModify(rq.getMember(), post)) throw new AccessDeniedException("수정권한이 없습니다.");
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
 
         postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
         PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
-                "%d번 게시글이 수정되었습니다.".formatted(postDto.getId()),
+                SuccessMessage.MODIFY_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -99,15 +101,15 @@ public class ApiV1PostsController {
     public RsData<?> deletePost(
             @PathVariable long id
     ) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException("해당 게시물을 찾을 수 없습니다."));
-        if (!postService.canDelete(rq.getMember(), post)) throw new AccessDeniedException("삭제권한이 없습니다.");
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canDelete(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_DELETE_PERMISSION.getMessage());
 
         postService.delete(post);
         PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
-                "%d번 게시글이 삭제되었습니다.".formatted(postDto.getId()),
+                SuccessMessage.DELETE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }

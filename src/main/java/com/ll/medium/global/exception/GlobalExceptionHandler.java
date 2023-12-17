@@ -1,5 +1,6 @@
 package com.ll.medium.global.exception;
 
+import com.ll.medium.global.common.ErrorMessage;
 import com.ll.medium.global.rsData.RsData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,22 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(CustomAccessDeniedException.class)
+    public ResponseEntity<RsData<Object>> handleAccessDeniedException(CustomAccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(RsData.of(
+                        "403",
+                        e.getMessage(),
+                        null
+                ));
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<RsData<Object>> handleAccessDeniedException(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(RsData.of(
                         "403",
-                        e.getMessage(),
+                        ErrorMessage.NOT_LOGGED_IN.getMessage(),
                         null
                 ));
     }

@@ -2,6 +2,8 @@ package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPosts"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POSTS_SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data[0].id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data[0].createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data[0].modifyDate", matchesPattern(DATE_PATTERN)))
@@ -69,6 +73,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getMyPosts"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_MY_POSTS_SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data[0].id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data[0].createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data[0].modifyDate", matchesPattern(DATE_PATTERN)))
@@ -93,7 +99,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getMyPosts"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("Access Denied")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
 
     @Test
@@ -109,7 +115,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
-                .andExpect(status().isOk())  // HTTP 상태 코드가 200인지 확인합니다.
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -134,7 +141,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
-                .andExpect(status().isOk())  // HTTP 상태 코드가 200인지 확인합니다.
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -158,8 +166,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
-                .andExpect(jsonPath("$.resultCode", is("404")))  // resultCode가 "404"인지 확인합니다.
-                .andExpect(jsonPath("$.msg", is("해당 게시물을 찾을 수 없습니다.")));  // 메시지가 올바른지 확인합니다.
+                .andExpect(jsonPath("$.resultCode", is("404")))
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.POST_NOT_FOUND.getMessage())));
     }
 
     @Test
@@ -176,7 +184,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("조회권한이 없습니다.")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_ACCESS.getMessage())));
     }
 
     @Test
@@ -194,7 +202,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getPost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("조회권한이 없습니다.")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_ACCESS.getMessage())));
     }
 
     @Test
@@ -211,6 +219,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("deletePost"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.DELETE_POST_SUCCESS.getMessage().formatted(1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -238,6 +248,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("deletePost"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.DELETE_POST_SUCCESS.getMessage().formatted(1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -265,7 +277,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("deletePost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("Access Denied")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
 
     @Test
@@ -283,7 +295,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("deletePost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("삭제권한이 없습니다.")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_DELETE_PERMISSION.getMessage())));
     }
 
     @Test
@@ -310,6 +322,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("modifyPost"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.MODIFY_POST_SUCCESS.getMessage().formatted(1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -344,7 +358,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("modifyPost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("Access Denied")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
 
     @Test
@@ -372,7 +386,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("modifyPost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("수정권한이 없습니다.")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_MODIFY_PERMISSION.getMessage())));
     }
 
     @Test
@@ -399,6 +413,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("writePost"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(51))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -434,6 +450,6 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("writePost"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is("Access Denied")));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
 }
