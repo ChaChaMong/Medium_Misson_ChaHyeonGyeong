@@ -30,7 +30,7 @@ public class ApiV1MembersController {
     ) {
         Optional<Member> memberOp = memberService.findByUsername(memberForm.getUsername());
 
-        if (!memberService.checkUsernameAndPassword(memberOp, memberForm.getUsername(), memberForm.getPassword())) {
+        if (!memberService.checkUsernameAndPassword(memberOp, memberForm.getPassword())) {
             throw new ResourceNotFoundException(ErrorMessage.LOGIN_FAIL.getMessage());
         }
 

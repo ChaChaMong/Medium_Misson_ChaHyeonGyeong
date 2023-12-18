@@ -74,29 +74,7 @@ public class MemberService {
         );
     }
 
-//    public boolean checkUsername(String username) {
-//        Optional<Member> memberOp = findByUsername(username);
-//
-//        if (memberOp.isEmpty()) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-//
-//
-//    public boolean checkPassword(String username, String password) {
-//        Optional<Member> memberOp = findByUsername(username);
-//
-//        if (!passwordEncoder.matches(password, memberOp.get().getPassword())) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
-    public boolean checkUsernameAndPassword(Optional<Member> memberOp, String username, String password) {
-
+    public boolean checkUsernameAndPassword(Optional<Member> memberOp, String password) {
         return memberOp.isPresent() && passwordEncoder.matches(password, memberOp.get().getPassword());
     }
 }
