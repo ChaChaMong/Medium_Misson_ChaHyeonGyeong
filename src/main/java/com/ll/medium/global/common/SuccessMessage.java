@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SuccessMessage {
     GET_POSTS_SUCCESS("전체 글 목록 조회 성공"),
+    GET_LATEST_POSTS_SUCCESS("최신 글 목록 조회 성공"),
     GET_MY_POSTS_SUCCESS("나의 글 목록 조회 성공"),
     GET_POST_SUCCESS("%d번 게시글이 조회되었습니다."),
     WRITE_POST_SUCCESS("%d번 게시글이 작성되었습니다."),

@@ -25,6 +25,19 @@ public class ApiV1PostsController {
     private final PostService postService;
     private final Rq rq;
 
+
+    @GetMapping("latest")
+    public RsData<?> getLatestPosts() {
+        List<Post> postEntities = postService.findTop30ByIsPublishedOrderByIdDesc(true);
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+
+        return RsData.of(
+                "200",
+                SuccessMessage.GET_LATEST_POSTS_SUCCESS.getMessage(),
+                postDtos
+        );
+    }
+
     @GetMapping("")
     public RsData<?> getPosts(@RequestParam(value="page", defaultValue="0") int page) {
         Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, page);
@@ -65,7 +78,7 @@ public class ApiV1PostsController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping
+    @PostMapping("")
     public RsData<?> writePost(@Valid @RequestBody PostForm postForm) {
         Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
         PostDto postDto = new PostDto(post);
