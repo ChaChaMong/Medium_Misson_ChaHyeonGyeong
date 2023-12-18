@@ -452,4 +452,30 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.resultCode", is("403")))
                 .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/latest - 200")
+    void t6() throws Exception {
+        //When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/latest"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getLatestPosts"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_LATEST_POSTS_SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.data[0].id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data[0].createDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data[0].modifyDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data[0].authorId", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data[0].authorName", notNullValue()))
+                .andExpect(jsonPath("$.data[0].title", notNullValue()))
+                .andExpect(jsonPath("$.data[0].body", notNullValue()))
+                .andExpect(jsonPath("$.data[0].published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.length()", is(30)));
+    }
 }
