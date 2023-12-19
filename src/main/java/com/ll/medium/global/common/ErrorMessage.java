@@ -13,7 +13,9 @@ public enum ErrorMessage {
     NO_DELETE_PERMISSION("삭제권한이 없습니다."),
 
     MEMBER_NOT_FOUND("해당 사용자를 찾을 수 없습니다."),
-    LOGIN_FAIL("존재하지 않는 회원이거나 비밀번호가 일치하지 않습니다.");
+    LOGIN_FAIL("존재하지 않는 회원이거나 비밀번호가 일치하지 않습니다."),
+    NOT_MATCH_PASSWORD("비밀번호가 서로 일치하지 않습니다."),
+    EXIST_USERNAME("이미 사용중인 아이디입니다.");
 
     private final String message;
 }

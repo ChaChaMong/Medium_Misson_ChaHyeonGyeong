@@ -2,6 +2,8 @@ package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import com.ll.medium.global.util.jwt.JwtUtil;
@@ -40,6 +42,21 @@ public class MemberService {
         memberRepository.save(member);
 
         return RsData.of("200", "%s님 가입을 환영합니다.".formatted(member.getUsername()), member);
+    }
+
+
+    @Transactional
+    public Member join(final Member member) {
+        if (memberRepository.existsByUsername(member.getUsername())) {
+            throw new ResourceNotFoundException(ErrorMessage.EXIST_USERNAME.getMessage());
+        }
+
+        Member encodingMember = Member.builder()
+                .username(member.getUsername())
+                .password(passwordEncoder.encode(member.getPassword()))
+                .build();
+
+        return memberRepository.save(encodingMember);
     }
 
     public Optional<Member> findByUsername(String username) {

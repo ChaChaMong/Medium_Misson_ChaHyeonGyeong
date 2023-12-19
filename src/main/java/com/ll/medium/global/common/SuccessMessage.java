@@ -17,7 +17,8 @@ public enum SuccessMessage {
     GET_POSTS_BY_USERNAME_SUCCESS("%s의 글 목록 조회 성공"),
     GET_POST_BY_USERNAME_SUCCESS("%s의 %d번 게시글이 조회되었습니다."),
     
-    LOGIN_SUCCESS("로그인 성공");
+    LOGIN_SUCCESS("로그인 성공"),
+    JOIN_SUCCESS("가입 성공");
 
     private final String message;
 }
