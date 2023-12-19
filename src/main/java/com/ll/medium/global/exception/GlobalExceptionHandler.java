@@ -15,8 +15,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(RsData.of(
                         "404",
-                        e.getMessage(),
-                        null
+                        e.getMessage()
                 ));
     }
 
@@ -25,8 +24,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(RsData.of(
                         "403",
-                        e.getMessage(),
-                        null
+                        e.getMessage()
                 ));
     }
 
@@ -35,8 +33,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(RsData.of(
                         "403",
-                        ErrorMessage.NOT_LOGGED_IN.getMessage(),
-                        null
+                        ErrorMessage.NOT_LOGGED_IN.getMessage()
                 ));
     }
 }

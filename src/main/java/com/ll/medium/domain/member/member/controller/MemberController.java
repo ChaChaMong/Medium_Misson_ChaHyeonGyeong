@@ -1,10 +1,10 @@
 package com.ll.medium.domain.member.member.controller;
 
-import com.ll.medium.domain.member.member.dto.MemberForm;
-import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.dto.LoginRequestDto;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.rq.Rq;
-import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,9 +36,13 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    String join(@Valid MemberForm memberForm){
-        RsData<Member> joinRs = memberService.join(memberForm.getUsername(), memberForm.getPassword());
+    String join(@Valid LoginRequestDto loginRequestDto){
+        if (memberService.existsByUsername(loginRequestDto.getUsername())) {
+            return rq.historyBack(ErrorMessage.EXIST_USERNAME.getMessage());
+        }
 
-        return rq.redirectOrBack("/member/login", joinRs);
+        memberService.join(loginRequestDto.getUsername(), loginRequestDto.getPassword());
+
+        return rq.redirect("/member/login", SuccessMessage.JOIN_SUCCESS.getMessage());
     }
 }

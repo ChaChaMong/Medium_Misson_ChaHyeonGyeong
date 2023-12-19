@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostForm {
+public class PostRequestDto {
     @NotBlank
     private String title;
     @NotBlank

@@ -2,9 +2,6 @@ package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.exception.ResourceNotFoundException;
-import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import com.ll.medium.global.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -27,33 +24,10 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public RsData<Member> join(String username, String password) {
-        if (findByUsername(username).isPresent()) {
-            return RsData.of("400", "이미 사용중인 아이디입니다.");
-        }
-
-        password = passwordEncoder.encode(password);
-        Member member = Member
-                .builder()
-                .username(username)
-                .password(password)
-                .build();
-
-        memberRepository.save(member);
-
-        return RsData.of("200", "%s님 가입을 환영합니다.".formatted(member.getUsername()), member);
-    }
-
-
-    @Transactional
-    public Member join(final Member member) {
-        if (memberRepository.existsByUsername(member.getUsername())) {
-            throw new ResourceNotFoundException(ErrorMessage.EXIST_USERNAME.getMessage());
-        }
-
+    public Member join(String username, String password) {
         Member encodingMember = Member.builder()
-                .username(member.getUsername())
-                .password(passwordEncoder.encode(member.getPassword()))
+                .username(username)
+                .password(passwordEncoder.encode(password))
                 .build();
 
         return memberRepository.save(encodingMember);
@@ -93,5 +67,9 @@ public class MemberService {
 
     public boolean checkUsernameAndPassword(Optional<Member> memberOp, String password) {
         return memberOp.isPresent() && passwordEncoder.matches(password, memberOp.get().getPassword());
+    }
+
+    public boolean existsByUsername(String username) {
+        return memberRepository.existsByUsername(username);
     }
 }

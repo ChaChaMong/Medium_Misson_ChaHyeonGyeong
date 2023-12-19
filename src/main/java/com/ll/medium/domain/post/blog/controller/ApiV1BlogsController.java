@@ -42,7 +42,10 @@ public class ApiV1BlogsController {
     }
 
     @GetMapping("/{username}/{id}")
-    public RsData<?> getPostById(@PathVariable String username, @PathVariable long id) {
+    public RsData<?> getPostById(
+            @PathVariable String username,
+            @PathVariable long id
+    ) {
         Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.MEMBER_NOT_FOUND.getMessage()));
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
         if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());

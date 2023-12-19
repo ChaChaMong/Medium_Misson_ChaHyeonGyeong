@@ -1,7 +1,7 @@
 package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.dto.PostDto;
-import com.ll.medium.domain.post.post.dto.PostForm;
+import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.common.ErrorMessage;
@@ -79,8 +79,8 @@ public class ApiV1PostsController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("")
-    public RsData<?> writePost(@Valid @RequestBody PostForm postForm) {
-        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+    public RsData<?> writePost(@Valid @RequestBody PostRequestDto postRequestDto) {
+        Post post = postService.write(rq.getMember(), postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
         PostDto postDto = new PostDto(post);
 
         return RsData.of(
@@ -94,12 +94,12 @@ public class ApiV1PostsController {
     @PutMapping("/{id}")
     public RsData<?> modifyPost(
             @PathVariable long id,
-            @Valid @RequestBody PostForm postForm
+            @Valid @RequestBody PostRequestDto postRequestDto
     ) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
         if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
 
-        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        postService.modify(post, postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
         PostDto postDto = new PostDto(post);
 
         return RsData.of(
@@ -111,9 +111,7 @@ public class ApiV1PostsController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public RsData<?> deletePost(
-            @PathVariable long id
-    ) {
+    public RsData<?> deletePost(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
         if (!postService.canDelete(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_DELETE_PERMISSION.getMessage());
 

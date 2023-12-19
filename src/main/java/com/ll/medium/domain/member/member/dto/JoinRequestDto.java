@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class JoinForm {
+public class JoinRequestDto {
     @NotBlank
     private String username;
     @NotBlank

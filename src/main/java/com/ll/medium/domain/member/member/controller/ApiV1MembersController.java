@@ -1,9 +1,9 @@
 package com.ll.medium.domain.member.member.controller;
 
-import com.ll.medium.domain.member.member.dto.JoinForm;
+import com.ll.medium.domain.member.member.dto.JoinRequestDto;
 import com.ll.medium.domain.member.member.dto.LoginResponseDto;
 import com.ll.medium.domain.member.member.dto.MemberDto;
-import com.ll.medium.domain.member.member.dto.MemberForm;
+import com.ll.medium.domain.member.member.dto.LoginRequestDto;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.common.ErrorMessage;
@@ -29,11 +29,11 @@ public class ApiV1MembersController {
 
     @PostMapping("/login")
     public RsData<?> login(
-            @RequestBody MemberForm memberForm
+            @RequestBody LoginRequestDto loginRequestDto
     ) {
-        Optional<Member> memberOp = memberService.findByUsername(memberForm.getUsername());
+        Optional<Member> memberOp = memberService.findByUsername(loginRequestDto.getUsername());
 
-        if (!memberService.checkUsernameAndPassword(memberOp, memberForm.getPassword())) {
+        if (!memberService.checkUsernameAndPassword(memberOp, loginRequestDto.getPassword())) {
             throw new ResourceNotFoundException(ErrorMessage.LOGIN_FAIL.getMessage());
         }
 
@@ -57,16 +57,17 @@ public class ApiV1MembersController {
 
     @PostMapping("/join")
     public RsData<?> join(
-            @Valid @RequestBody JoinForm joinForm
+            @Valid @RequestBody JoinRequestDto joinRequestDto
     ) {
-        if (!joinForm.isPasswordConfirm()) {
+        if (!joinRequestDto.isPasswordConfirm()) {
             throw new ResourceNotFoundException(ErrorMessage.NOT_MATCH_PASSWORD.getMessage());
         }
 
-        Member member = memberService.join(Member.builder()
-                .username(joinForm.getUsername())
-                .password(joinForm.getPassword())
-                .build());
+        if (memberService.existsByUsername(joinRequestDto.getUsername())) {
+            throw new ResourceNotFoundException(ErrorMessage.EXIST_USERNAME.getMessage());
+        }
+
+        Member member = memberService.join(joinRequestDto.getUsername(), joinRequestDto.getPassword());
 
         return RsData.of(
                 "200",
