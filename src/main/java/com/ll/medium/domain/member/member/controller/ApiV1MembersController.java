@@ -10,6 +10,7 @@ import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.common.ErrorMessage;
 import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.exception.ResourceNotFoundException;
+import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class ApiV1MembersController {
     private final MemberService memberService;
     private final AuthTokenService authTokenService;
+    private final Rq rq;
 
     @PostMapping("/login")
     public RsData<?> login(
@@ -41,6 +43,9 @@ public class ApiV1MembersController {
 
         String refreshToken = authTokenService.genRefreshToken(member);
         String accessToken = authTokenService.genAccessToken(member);
+
+        rq.setCrossDomainCookie("refreshToken", refreshToken);
+        rq.setCrossDomainCookie("accessToken", accessToken);
 
         return RsData.of(
                 "200",

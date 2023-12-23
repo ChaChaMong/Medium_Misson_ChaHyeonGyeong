@@ -16,7 +16,7 @@ public class AuthTokenService {
                 Map.of(
                         "id", member.getId(),
                         "username", member.getUsername(),
-                        "authorities", member.getAuthoritiesAsStrList()
+                        "authorities", member.getAuthoritiesAsStringList()
                 ),
                 expireSeconds
         );

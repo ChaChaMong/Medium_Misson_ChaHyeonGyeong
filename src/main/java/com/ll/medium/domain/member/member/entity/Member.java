@@ -31,13 +31,13 @@ public class Member extends BaseEntity {
     }
 
     public List<? extends GrantedAuthority> getAuthorities() {
-        return getAuthoritiesAsStrList()
+        return getAuthoritiesAsStringList()
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
 
-    public List<String> getAuthoritiesAsStrList() {
+    public List<String> getAuthoritiesAsStringList() {
         if (isAdmin()) {
             return List.of("ROLE_ADMIN", "ROLE_MEMBER");
         }
