@@ -41,6 +41,10 @@ public class PostService {
         return postRepository.findById(id);
     }
 
+    public Optional<Post> findByIdAndAuthorId(long id, long authorId) {
+        return postRepository.findByIdAndAuthorId(id, authorId);
+    }
+
     @Transactional
     public Post write(Member author, String title, String body, boolean isPublished) {
         Post post = Post.builder()
