@@ -139,4 +139,21 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(jsonPath("$.resultCode", is("403")))
                 .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_ACCESS.getMessage())));
     }
+
+    @Test
+    @DisplayName("GET /api/v1/b/user1/40 - 게시글 id와 작성자 id가 다를 시 404")
+    void t1_5() throws Exception {
+        //When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/b/user1/40"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().is4xxClientError())
+                .andExpect(handler().handlerType(ApiV1BlogsController.class))
+                .andExpect(handler().methodName("getPostById"))
+                .andExpect(jsonPath("$.resultCode", is("404")))
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.POST_NOT_FOUND.getMessage())));
+    }
 }
