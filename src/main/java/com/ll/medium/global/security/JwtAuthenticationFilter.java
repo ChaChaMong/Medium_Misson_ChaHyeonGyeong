@@ -19,11 +19,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        String apiKey = rq.getHeader("X-ApiKey", null);
+        String accessToken = rq.getCookieValue("accessToken", "");
 
-        if (apiKey != null) {
-            SecurityUser user = memberService.getUserFromApiKey(apiKey);
-            rq.setAuthentication(user);
+        if (!accessToken.isBlank()) {
+            String refreshToken = rq.getCookieValue("refreshToken", "");
+
+            SecurityUser securityUser = memberService.getUserFromAccessToken(accessToken);
+            rq.setLogin(securityUser);
+
         }
 
         filterChain.doFilter(request, response);

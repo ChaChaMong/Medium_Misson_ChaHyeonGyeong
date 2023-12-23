@@ -22,6 +22,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthTokenService authTokenService;
 
     @Transactional
     public Member join(String username, String password) {
@@ -45,8 +46,8 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public SecurityUser getUserFromApiKey(String apiKey) {
-        Claims claims = JwtUtil.decode(apiKey);
+    public SecurityUser getUserFromAccessToken(String accessToken) {
+        Claims claims = JwtUtil.decode(accessToken);
 
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
         long id = Long.parseLong(data.get("id").toString());

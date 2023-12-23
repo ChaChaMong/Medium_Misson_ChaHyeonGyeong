@@ -4,13 +4,13 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -117,14 +117,29 @@ public class Rq {
         return value;
     }
 
-    public void setAuthentication(SecurityUser user) {
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user,
-                user.getPassword(),
-                user.getAuthorities()
-        );
+    public Cookie getCookie(String name) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(name)) {
+                return cookie;
+            }
+        }
+        return null;
+    }
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
+    public String getCookieValue(String name, String defaultValue) {
+        Cookie cookie = getCookie(name);
+        if (cookie == null) {
+            return defaultValue;
+        }
+        return cookie.getValue();
+    }
+
+    public void setLogin(SecurityUser securityUser) {
+        SecurityContextHolder.getContext().setAuthentication(securityUser.genAuthentication());
     }
 
     public void setCrossDomainCookie(String name, String value) {
