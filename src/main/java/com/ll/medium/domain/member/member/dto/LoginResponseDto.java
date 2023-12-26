@@ -8,12 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginResponseDto {
     private MemberDto item;
-    private String refreshToken;
     private String accessToken;
 
-    public LoginResponseDto(Member member, String refreshToken, String accessToken) {
+    public LoginResponseDto(Member member, String accessToken) {
         this.item = new MemberDto(member);
-        this.refreshToken = refreshToken;
         this.accessToken = accessToken;
     }
 }

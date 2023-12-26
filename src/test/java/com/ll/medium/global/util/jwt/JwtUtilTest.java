@@ -12,7 +12,7 @@ public class JwtUtilTest {
     @DisplayName("t1")
     void t1() {
         Map<String, Object> data = Map.of("name", "홍길동", "age", "22");
-        String jwtToken = JwtUtil.encode(data, 60 * 10);
+        String jwtToken = JwtUtil.encode(data);
 
         System.out.println(jwtToken);
 

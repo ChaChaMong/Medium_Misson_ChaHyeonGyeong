@@ -49,9 +49,8 @@ public class MemberService {
         Claims claims = JwtUtil.decode(apiKey);
 
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
-        long id = Long.parseLong(data.get("id").toString());
+        long id = Long.parseLong((String) data.get("id"));
         String username = (String) data.get("username");
-
         List<? extends GrantedAuthority> authorities = ((List<String>) data.get("authorities"))
                 .stream()
                 .map(SimpleGrantedAuthority::new)

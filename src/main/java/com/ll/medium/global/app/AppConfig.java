@@ -23,9 +23,6 @@ public class AppConfig {
     @Getter
     public static String siteBaseUrl;
 
-    @Getter
-    public static String jwtSecretKey;
-
     @Value("${custom.tempDirPath}")
     public void setTempDirPath(String tempDirPath) {
         AppConfig.tempDirPath = tempDirPath;
@@ -57,10 +54,5 @@ public class AppConfig {
         }
 
         return resourcesStaticDirPath;
-    }
-
-    @Value("${custom.jwt.secretKey}")
-    public void setJwtSecretKey(String jwtSecretKey) {
-        AppConfig.jwtSecretKey = jwtSecretKey;
     }
 }
