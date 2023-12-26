@@ -1,17 +1,17 @@
 package com.ll.medium.global.rq;
 
 import com.ll.medium.domain.member.member.entity.Member;
-import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rsData.RsData;
-import jakarta.annotation.PostConstruct;
+import com.ll.medium.global.security.SecurityUser;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -27,19 +27,9 @@ import java.util.Date;
 public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
-    private final MemberService memberService;
-    private User user;
+    private final EntityManager entityManager;
     private Member member;
-
-    @PostConstruct
-    public void init() {
-        // 현재 로그인한 회원의 인증정보를 가져옴
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication.getPrincipal() instanceof User) {
-            this.user = (User) authentication.getPrincipal();
-        }
-    }
+    private SecurityUser securityUser;
 
     public String redirect(String path, RsData<?> rs) {
         return redirect(path, rs.getMsg());
@@ -61,25 +51,6 @@ public class Rq {
         return "redirect:" + path + "?msg=" + msg;
     }
 
-    public boolean isLogined() {
-        return user != null;
-    }
-
-    private String getMemberUsername() {
-        return user.getUsername();
-    }
-
-    public Member getMember() {
-        if (!isLogined()) {
-            return null;
-        }
-
-        if (member == null)
-            member = memberService.findByUsername(getMemberUsername()).get();
-
-        return member;
-    }
-
     public String historyBack(RsData<?> rs) {
         return historyBack(rs.getMsg());
     }
@@ -96,18 +67,62 @@ public class Rq {
         return redirect(url, rs);
     }
 
-    public void setAttribute(String key, Object value) {
-        req.setAttribute(key, value);
+    public boolean isAdmin() {
+        if (isLogout()) return false;
+
+        return getSecurityUser()
+                .getAuthorities()
+                .stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    public Member getMemberDump() {
-        if (member == null) {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            user.getUsername();
+    public boolean isLogin() {
+        return getSecurityUser() != null;
+    }
 
-            member = memberService.findByUsername(user.getUsername()).get();
+    public boolean isLogout() {
+        return !isLogin();
+    }
+
+    public SecurityUser getSecurityUser() {
+        if (securityUser == null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) return null;
+            Object principal = authentication.getPrincipal();
+            if (principal == null || principal == "anonymousUser") return null;
+            securityUser = (SecurityUser) principal;
+        }
+
+        return securityUser;
+    }
+
+    public Member getMember() {
+        if (isLogout()) return null;
+
+        if (member == null) {
+            member = entityManager.find(Member.class, getSecurityUser().getId());
         }
 
         return member;
+    }
+
+    public String getHeader(String name, String defaultValue) {
+        String value = req.getHeader(name);
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return value;
+    }
+
+    public void setAuthentication(SecurityUser user) {
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user,
+                user.getPassword(),
+                user.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 }

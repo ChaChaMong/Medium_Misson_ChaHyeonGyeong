@@ -6,9 +6,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberForm {
+public class JoinRequestDto {
     @NotBlank
     private String username;
     @NotBlank
     private String password;
+    @NotBlank
+    private String passwordConfirm;
+
+    public boolean isPasswordConfirm() {
+        return password.equals(passwordConfirm);
+    }
 }

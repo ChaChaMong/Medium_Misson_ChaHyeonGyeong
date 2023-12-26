@@ -1,6 +1,6 @@
 package com.ll.medium.domain.post.post.controller;
 
-import com.ll.medium.domain.post.post.dto.PostForm;
+import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.Rq;
@@ -60,8 +60,8 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
-    public String write(@Valid PostForm postForm){
-        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+    public String write(@Valid PostRequestDto postRequestDto){
+        Post post = postService.write(rq.getMember(), postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
 
         RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
 
@@ -84,14 +84,14 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/modify")
-    public String modify(@PathVariable long id, @Valid PostForm postForm){
+    public String modify(@PathVariable long id, @Valid PostRequestDto postRequestDto){
         Post post = postService.findById(id).get();
 
         if (!postService.canModify(rq.getMember(), post)) {
             return rq.historyBack("수정권한이 없습니다.");
         }
 
-        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        postService.modify(post, postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
 
         RsData<Post> modifyRs = RsData.of("200", "%d번 게시글이 수정되었습니다.".formatted(post.getId()), post);
 

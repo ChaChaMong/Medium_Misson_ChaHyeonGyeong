@@ -35,9 +35,9 @@ public class NotProd {
     public void work1() {
         if (memberService.count() > 0) return;
 
-        Member admin = memberService.join("admin", "1234").getData();
-        Member member1 = memberService.join("user1", "1234").getData();
-        Member member2 = memberService.join("user2", "1234").getData();
+        Member admin = memberService.join("admin", "1234");
+        Member member1 = memberService.join("user1", "1234");
+        Member member2 = memberService.join("user2", "1234");
 
         IntStream.rangeClosed(1, 10).forEach(
                 i -> {

@@ -1,15 +1,19 @@
 package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.dto.PostDto;
-import com.ll.medium.domain.post.post.dto.PostForm;
+import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.exception.CustomAccessDeniedException;
+import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,165 +25,103 @@ public class ApiV1PostsController {
     private final PostService postService;
     private final Rq rq;
 
-    @Getter
-    public static class GetPostsResponseBody {
-        private final List<PostDto> items;
 
-        public GetPostsResponseBody(Page<Post> posts) {
-            items = posts
-                    .stream()
-                    .map(PostDto::new)
-                    .toList();
-        }
+    @GetMapping("latest")
+    public RsData<?> getLatestPosts() {
+        List<Post> postEntities = postService.findTop30ByIsPublishedOrderByIdDesc(true);
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+
+        return RsData.of(
+                "200",
+                SuccessMessage.GET_LATEST_POSTS_SUCCESS.getMessage(),
+                postDtos
+        );
     }
 
     @GetMapping("")
-    public RsData<GetPostsResponseBody> getPosts(
-            @RequestParam(value="page",
-                    defaultValue="0") int page
-    ) {
+    public RsData<?> getPosts(@RequestParam(value="page", defaultValue="0") int page) {
+        Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, page);
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+
         return RsData.of(
                 "200",
-                "성공",
-                new GetPostsResponseBody(
-                        postService.findByIsPublishedOrderByIdDesc(true, page)
-                )
+                SuccessMessage.GET_POSTS_SUCCESS.getMessage(),
+                postDtos
         );
     }
 
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
-    public RsData<GetPostsResponseBody> getMyPosts(
-            @RequestParam(value="page",
-                    defaultValue="0") int page
-    ) {
+    public RsData<?> getMyPosts(@RequestParam(value="page", defaultValue="0") int page) {
+        Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+
         return RsData.of(
                 "200",
-                "성공",
-                new GetPostsResponseBody(
-                        postService.findByAuthorIdOrderByIdDesc(rq.getMemberDump().getId(), page)
-                )
+                SuccessMessage.GET_MY_POSTS_SUCCESS.getMessage(),
+                postDtos
         );
-    }
-
-    @Getter
-    public static class GetPostResponseBody {
-        private final PostDto item;
-
-        public GetPostResponseBody(Post post) {
-            item = new PostDto(post);
-        }
     }
 
     @GetMapping("/{id}")
-    public RsData<GetPostResponseBody> getPost(
-            @PathVariable long id
-    ) {
+    public RsData<?> getPost(@PathVariable long id) {
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());
+
+        PostDto postDto = new PostDto(post);
+
         return RsData.of(
                 "200",
-                "성공",
-                new GetPostResponseBody(
-                        postService.findById(id).get()
-                )
-        );
-
-//        Post post = postService.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-//
-//        if (!postService.canAccess(rq.getMember(), post)) throw new RuntimeException("조회권한이 없습니다.");
-//
-//        return post;
-    }
-
-    @Getter
-    public static class WritePostResponseBody {
-        private final PostDto item;
-
-        public WritePostResponseBody(Post post) {
-            item = new PostDto(post);
-        }
-    }
-
-    //@PreAuthorize("isAuthenticated()")
-    @PostMapping
-    public RsData<WritePostResponseBody> writePost(
-            @Valid @RequestBody PostForm postForm
-    ) {
-        Post post = postService.write(rq.getMember(), postForm.getTitle(), postForm.getBody(), postForm.isPublished());
-
-        RsData<Post> writeRs = RsData.of("200", "%d번 게시글이 작성되었습니다.".formatted(post.getId()), post);
-
-        return writeRs.of(
-                new WritePostResponseBody(
-                        writeRs.getData()
-                )
+                SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                postDto
         );
     }
 
-    @Getter
-    public static class ModifyPostResponseBody {
-        private final PostDto item;
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("")
+    public RsData<?> writePost(@Valid @RequestBody PostRequestDto postRequestDto) {
+        Post post = postService.write(rq.getMember(), postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
+        PostDto postDto = new PostDto(post);
 
-        public ModifyPostResponseBody(Post post) {
-            item = new PostDto(post);
-        }
+        return RsData.of(
+                "200",
+                SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                postDto
+        );
     }
 
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}")
-    public RsData<ModifyPostResponseBody> modifyPost(
+    public RsData<?> modifyPost(
             @PathVariable long id,
-            @Valid @RequestBody PostForm postForm
+            @Valid @RequestBody PostRequestDto postRequestDto
     ) {
-        Post post = postService.findById(id).get();
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
 
-        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
+        postService.modify(post, postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
+        PostDto postDto = new PostDto(post);
 
-        RsData<Post> modifyRs = RsData.of("200", "%d번 게시글이 수정되었습니다.".formatted(post.getId()), post);
-
-        return modifyRs.of(
-                new ModifyPostResponseBody(
-                        modifyRs.getData()
-                )
+        return RsData.of(
+                "200",
+                SuccessMessage.MODIFY_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                postDto
         );
-
-//        Post post = postService.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-//
-//        if (!postService.canModify(rq.getMember(), post)) throw new RuntimeException("수정권한이 없습니다.");
-//
-//        postService.modify(post, postForm.getTitle(), postForm.getBody(), postForm.isPublished());
-//
-//        return post;
     }
 
-    @Getter
-    public static class DeletePostResponseBody {
-        private final PostDto item;
-
-        public DeletePostResponseBody(Post post) {
-            item = new PostDto(post);
-        }
-    }
-
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public RsData<DeletePostResponseBody> deletePost(
-            @PathVariable long id
-    ) {
-        Post post = postService.findById(id).get();
+    public RsData<?> deletePost(@PathVariable long id) {
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canDelete(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_DELETE_PERMISSION.getMessage());
 
         postService.delete(post);
+        PostDto postDto = new PostDto(post);
 
-        RsData<Post> deleteRs = RsData.of("200", "%d번 게시글이 삭제되었습니다.".formatted(post.getId()), post);
-
-        return deleteRs.of(
-                new DeletePostResponseBody(
-                        deleteRs.getData()
-                )
+        return RsData.of(
+                "200",
+                SuccessMessage.DELETE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                postDto
         );
-//        Post post = postService.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-//
-//        if (!postService.canDelete(rq.getMember(), post)) throw new RuntimeException("삭제권한이 없습니다.");
-//
-//        postService.delete(post);
     }
 }
