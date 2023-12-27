@@ -11,21 +11,30 @@ import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.*;
+
 @RestController
-@RequestMapping("/api/v1/b")
+@RequestMapping(value = "/api/v1/b", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Tag(name = "ApiV1BlogController", description = "특정 사용자의 글 관련 컨트롤러")
+@SecurityRequirement(name = "bearerAuth")
 public class ApiV1BlogsController {
     private final PostService postService;
     private final MemberService memberService;
     private final Rq rq;
 
-    @GetMapping("/{username}")
+    @GetMapping(value = "/{username}", consumes = ALL_VALUE)
+    @SecurityRequirement(name = "none")
+    @Operation(summary = "특정 사용자의 글 리스트")
     public RsData<?> getPostsByUsername(
             @PathVariable String username,
             @RequestParam(value = "page", defaultValue = "0") int page
@@ -41,7 +50,8 @@ public class ApiV1BlogsController {
         );
     }
 
-    @GetMapping("/{username}/{id}")
+    @GetMapping(value = "/{username}/{id}", consumes = ALL_VALUE)
+    @Operation(summary = "특정 사용자의 글 상세 조회")
     public RsData<?> getPostById(
             @PathVariable String username,
             @PathVariable long id

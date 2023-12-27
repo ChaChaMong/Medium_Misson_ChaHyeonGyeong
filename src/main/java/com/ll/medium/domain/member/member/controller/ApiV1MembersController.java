@@ -12,6 +12,9 @@ import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,17 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
-@RequestMapping("/api/v1/members")
+@RequestMapping(value = "/api/v1/members", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Tag(name = "ApiV1MembersController", description = "계정 관련 컨트롤러")
+@SecurityRequirement(name = "bearerAuth")
 public class ApiV1MembersController {
     private final MemberService memberService;
     private final AuthTokenService authTokenService;
     private final Rq rq;
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login")
+    @Operation(summary = "로그인, 로그인 성공시 accessToken, refreshToken 쿠키 설정")
     public RsData<?> login(
-            @RequestBody LoginRequestDto loginRequestDto
+            @Valid @RequestBody LoginRequestDto loginRequestDto
     ) {
         Optional<Member> memberOp = memberService.findByUsername(loginRequestDto.getUsername());
 
@@ -55,6 +63,7 @@ public class ApiV1MembersController {
     }
 
     @PostMapping("/join")
+    @Operation(summary = "회원가입")
     public RsData<?> join(
             @Valid @RequestBody JoinRequestDto joinRequestDto
     ) {
