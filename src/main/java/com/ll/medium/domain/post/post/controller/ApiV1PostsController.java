@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,17 +49,30 @@ public class ApiV1PostsController {
         );
     }
 
+    @Getter
+    public static class GetItemsResponseBody {
+        @NonNull
+        private final List<PostDto> items;
+
+        public GetItemsResponseBody(Page<Post> posts) {
+            this.items = posts
+                    .stream()
+                    .map(PostDto::new)
+                    .toList();
+        }
+    }
+
     @GetMapping(value = "", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "글 리스트")
-    public RsData<?> getPosts(@RequestParam(value="page", defaultValue="0") int page) {
-        Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, page);
-        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+    public RsData<GetItemsResponseBody> getPosts(@RequestParam(value="page", defaultValue="0") int page) {
+        Page<Post> posts = postService.findByIsPublishedOrderByIdDesc(true, page);
+        //List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
 
         return RsData.of(
                 "200",
                 SuccessMessage.GET_POSTS_SUCCESS.getMessage(),
-                postDtos
+                new GetItemsResponseBody(posts)
         );
     }
 

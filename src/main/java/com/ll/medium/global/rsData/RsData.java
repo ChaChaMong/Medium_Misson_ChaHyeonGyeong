@@ -2,15 +2,20 @@ package com.ll.medium.global.rsData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @AllArgsConstructor(access = PROTECTED)
 @Getter
 public class RsData<T> {
+    @NonNull
     private final String resultCode;
+    @NonNull
     private final String msg;
+    @NonNull
     private final T data;
+    @NonNull
     private final int statusCode;
 
     public static <T> RsData<T> of(String resultCode, String msg, T data) {
@@ -27,10 +32,12 @@ public class RsData<T> {
         return of(resultCode, msg, null);
     }
 
+    @NonNull
     public boolean isSuccess() {
         return statusCode >= 200 && statusCode < 400;
     }
 
+    @NonNull
     public boolean isFail() {
         return !isSuccess();
     }

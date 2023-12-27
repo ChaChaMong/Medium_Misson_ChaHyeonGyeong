@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
@@ -25,6 +26,7 @@ public class NotProd {
     private final PostService postService;
 
     @Bean
+    @Order(3)
     public ApplicationRunner initNotProdData() {
         return args -> {
             self.work1();
@@ -33,9 +35,8 @@ public class NotProd {
 
     @Transactional
     public void work1() {
-        if (memberService.count() > 0) return;
+        if (memberService.findByUsername("user1").isPresent()) return;
 
-        Member admin = memberService.join("admin", "1234");
         Member member1 = memberService.join("user1", "1234");
         Member member2 = memberService.join("user2", "1234");
 
@@ -60,14 +61,6 @@ public class NotProd {
                     String title = "제목" + i;
                     String body = "내용" + i;
                     postService.write(member2, title, body, true);
-                }
-        );
-
-        IntStream.rangeClosed(41, 50).forEach(
-                i -> {
-                    String title = "제목" + i;
-                    String body = "내용" + i;
-                    postService.write(admin, title, body, false);
                 }
         );
     }
