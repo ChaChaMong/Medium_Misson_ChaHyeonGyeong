@@ -1,5 +1,6 @@
 package com.ll.medium.global.rsData;
 
+import com.ll.medium.standard.base.Empty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -28,8 +29,8 @@ public class RsData<T> {
         return RsData.of(resultCode, msg, data);
     }
 
-    public static <T> RsData<T> of(String resultCode, String msg) {
-        return of(resultCode, msg, null);
+    public static RsData<Empty> of(String resultCode, String msg) {
+        return of(resultCode, msg, new Empty());
     }
 
     @NonNull
