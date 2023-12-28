@@ -35,7 +35,7 @@ public class ApiV1BlogsController {
     @GetMapping(value = "/{username}", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "특정 사용자의 글 리스트")
-    public RsData<?> getPostsByUsername(
+    public RsData<List<PostDto>> getPostsByUsername(
             @PathVariable String username,
             @RequestParam(value = "page", defaultValue = "0") int page
     ) {
@@ -52,7 +52,7 @@ public class ApiV1BlogsController {
 
     @GetMapping(value = "/{username}/{id}", consumes = ALL_VALUE)
     @Operation(summary = "특정 사용자의 글 상세 조회")
-    public RsData<?> getPostById(
+    public RsData<PostDto> getPostById(
             @PathVariable String username,
             @PathVariable long id
     ) {

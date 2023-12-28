@@ -54,24 +54,6 @@ export interface components {
       body: string;
       published?: boolean;
     };
-    RsDataObject: {
-      resultCode: string;
-      msg: string;
-      data: Record<string, never>;
-      /** Format: int32 */
-      statusCode: number;
-      fail: boolean;
-      success: boolean;
-    };
-    LoginRequestDto: {
-      username: string;
-      password: string;
-    };
-    JoinRequestDto: {
-      username: string;
-      password: string;
-      passwordConfirm: string;
-    };
     PostDto: {
       /** Format: int64 */
       id: number;
@@ -84,7 +66,58 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
-      published?: boolean;
+      published: boolean;
+    };
+    RsDataPostDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["PostDto"];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
+    };
+    LoginRequestDto: {
+      username: string;
+      password: string;
+    };
+    LoginResponseDto: {
+      item: components["schemas"]["MemberDto"];
+      refreshToken: string;
+      accessToken: string;
+    };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      username: string;
+      authorities: string[];
+    };
+    RsDataLoginResponseDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["LoginResponseDto"];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
+    };
+    JoinRequestDto: {
+      username: string;
+      password: string;
+      passwordConfirm: string;
+    };
+    RsDataMemberDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["MemberDto"];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -120,7 +153,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -141,7 +174,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -157,7 +190,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -189,7 +222,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
@@ -205,7 +238,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataLoginResponseDto"];
         };
       };
     };
@@ -221,7 +254,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataMemberDto"];
         };
       };
     };
@@ -237,7 +270,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
     };
@@ -248,7 +281,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
     };
@@ -267,7 +300,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
     };
@@ -284,7 +317,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataObject"];
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };

@@ -38,7 +38,7 @@ public class ApiV1MembersController {
 
     @PostMapping(value = "/login")
     @Operation(summary = "로그인, 로그인 성공시 accessToken, refreshToken 쿠키 설정")
-    public RsData<?> login(
+    public RsData<LoginResponseDto> login(
             @Valid @RequestBody LoginRequestDto loginRequestDto
     ) {
         Optional<Member> memberOp = memberService.findByUsername(loginRequestDto.getUsername());
@@ -64,7 +64,7 @@ public class ApiV1MembersController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입")
-    public RsData<?> join(
+    public RsData<MemberDto> join(
             @Valid @RequestBody JoinRequestDto joinRequestDto
     ) {
         if (!joinRequestDto.isPasswordConfirm()) {

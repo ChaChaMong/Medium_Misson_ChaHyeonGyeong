@@ -22,6 +22,7 @@ public class PostDto {
     private final String title;
     @NonNull
     private final String body;
+    @NonNull
     private final boolean isPublished;
 
     public PostDto(Post post) {

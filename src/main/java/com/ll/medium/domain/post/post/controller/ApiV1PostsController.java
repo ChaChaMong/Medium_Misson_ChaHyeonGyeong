@@ -36,7 +36,7 @@ public class ApiV1PostsController {
     @GetMapping(value = "latest", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "최신 글 리스트")
-    public RsData<?> getLatestPosts() {
+    public RsData<List<PostDto>> getLatestPosts() {
         List<Post> postEntities = postService.findTop30ByIsPublishedOrderByIdDesc(true);
         List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
 
@@ -64,7 +64,7 @@ public class ApiV1PostsController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/myList", consumes = ALL_VALUE)
     @Operation(summary = "내 글 리스트")
-    public RsData<?> getMyPosts(@RequestParam(value="page", defaultValue="0") int page) {
+    public RsData<List<PostDto>> getMyPosts(@RequestParam(value="page", defaultValue="0") int page) {
         Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
         List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
 
@@ -77,7 +77,7 @@ public class ApiV1PostsController {
 
     @GetMapping(value = "/{id}", consumes = ALL_VALUE)
     @Operation(summary = "글 상세 조회")
-    public RsData<?> getPost(@PathVariable long id) {
+    public RsData<PostDto> getPost(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
         if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());
 
@@ -93,7 +93,7 @@ public class ApiV1PostsController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "")
     @Operation(summary = "글 작성")
-    public RsData<?> writePost(@Valid @RequestBody PostRequestDto postRequestDto) {
+    public RsData<PostDto> writePost(@Valid @RequestBody PostRequestDto postRequestDto) {
         Post post = postService.write(rq.getMember(), postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
         PostDto postDto = new PostDto(post);
 
@@ -107,7 +107,7 @@ public class ApiV1PostsController {
     @PreAuthorize("isAuthenticated()")
     @PutMapping(value = "/{id}")
     @Operation(summary = "글 수정")
-    public RsData<?> modifyPost(
+    public RsData<PostDto> modifyPost(
             @PathVariable long id,
             @Valid @RequestBody PostRequestDto postRequestDto
     ) {
@@ -127,7 +127,7 @@ public class ApiV1PostsController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping(value = "/{id}", consumes = ALL_VALUE)
     @Operation(summary = "글 삭제")
-    public RsData<?> deletePost(@PathVariable long id) {
+    public RsData<PostDto> deletePost(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
         if (!postService.canDelete(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_DELETE_PERMISSION.getMessage());
 
