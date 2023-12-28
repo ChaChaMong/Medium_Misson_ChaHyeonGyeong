@@ -1,27 +1,25 @@
-<script>
-	let posts = $state([]);
-	$effect(() => {
-		fetch('http://localhost:8090/api/v1/posts/myList', {
-			credentials: 'include'
-		})
-			.then((response) => response.json())
-			.then((json) => (posts = json));
+<script lang="ts">
+	import rq from '$lib/rq/rq.svelte';
+	import type { components } from '$lib/types/api/v1/schema';
+
+	let posts: components['schemas']['PostDto'][] = $state([]);
+	rq.effect(async () => {
+		const { data } = await rq.apiEndPoints().GET('/api/v1/posts/myList');
+
+		if (data) {
+			posts = data.data;
+		}
 	});
 </script>
 
-<table>
-	<thead>
-		<tr>
-			<th>제목</th>
-			<th>내용</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each posts.data as post (post.id)}
-			<tr>
-				<td>{post.title}</td>
-				<td>{post.body}</td>
-			</tr>
+<div>
+	<h1>Posts</h1>
+
+	<ul>
+		{#each posts as post}
+			<li>
+				<a href="/posts/{post.id}">{post.id}. {post.title}</a>
+			</li>
 		{/each}
-	</tbody>
-</table>
+	</ul>
+</div>
