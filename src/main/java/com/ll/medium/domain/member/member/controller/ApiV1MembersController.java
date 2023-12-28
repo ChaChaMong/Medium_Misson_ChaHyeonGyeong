@@ -12,19 +12,18 @@ import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.standard.base.Empty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.util.MimeTypeUtils.ALL_VALUE;
 
 @RestController
 @RequestMapping(value = "/api/v1/members", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -81,6 +80,27 @@ public class ApiV1MembersController {
                 "200",
                 SuccessMessage.JOIN_SUCCESS.getMessage(),
                 new MemberDto(member)
+        );
+    }
+
+    @GetMapping(value = "/me", consumes = ALL_VALUE)
+    @Operation(summary = "내 정보")
+    public RsData<MemberDto> getMe() {
+        return RsData.of(
+                "200",
+                SuccessMessage.GET_MY_PROFILE_SUCCESS.getMessage(),
+                new MemberDto(rq.getMember())
+        );
+    }
+
+    @PostMapping(value = "/logout", consumes = ALL_VALUE)
+    @Operation(summary = "로그아웃")
+    public RsData<Empty> logout() {
+        rq.setLogout();
+
+        return RsData.of(
+                "200",
+                SuccessMessage.LOGOUT_SUCCESS.getMessage()
         );
     }
 }

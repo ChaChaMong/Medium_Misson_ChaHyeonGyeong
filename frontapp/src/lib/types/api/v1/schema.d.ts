@@ -19,6 +19,10 @@ export interface paths {
     /** 글 작성 */
     post: operations["writePost"];
   };
+  "/api/v1/members/logout": {
+    /** 로그아웃 */
+    post: operations["logout"];
+  };
   "/api/v1/members/login": {
     /** 로그인, 로그인 성공시 accessToken, refreshToken 쿠키 설정 */
     post: operations["login"];
@@ -34,6 +38,10 @@ export interface paths {
   "/api/v1/posts/latest": {
     /** 최신 글 리스트 */
     get: operations["getLatestPosts"];
+  };
+  "/api/v1/members/me": {
+    /** 내 정보 */
+    get: operations["getMe"];
   };
   "/api/v1/b/{username}": {
     /** 특정 사용자의 글 리스트 */
@@ -74,8 +82,18 @@ export interface components {
       data: components["schemas"]["PostDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
+    };
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      /** Format: int32 */
+      statusCode: number;
+      success: boolean;
+      fail: boolean;
     };
     LoginRequestDto: {
       username: string;
@@ -102,8 +120,8 @@ export interface components {
       data: components["schemas"]["LoginResponseDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     JoinRequestDto: {
       username: string;
@@ -116,8 +134,8 @@ export interface components {
       data: components["schemas"]["MemberDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -125,8 +143,8 @@ export interface components {
       data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
@@ -227,6 +245,17 @@ export interface operations {
       };
     };
   };
+  /** 로그아웃 */
+  logout: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 로그인, 로그인 성공시 accessToken, refreshToken 쿠키 설정 */
   login: {
     requestBody: {
@@ -282,6 +311,17 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataListPostDto"];
+        };
+      };
+    };
+  };
+  /** 내 정보 */
+  getMe: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataMemberDto"];
         };
       };
     };

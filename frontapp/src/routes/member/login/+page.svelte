@@ -1,36 +1,32 @@
 <script lang="ts">
-	function submitLoginForm(this: HTMLFormElement) {
+	import rq from '$lib/rq/rq.svelte';
+	async function submitLoginForm(this: HTMLFormElement) {
 		const form: HTMLFormElement = this;
 		form.username.value = form.username.value.trim();
 		if (form.username.value.length === 0) {
-			alert('Username is required');
+			rq.msgError('Username is required');
 			form.username.focus();
 			return;
 		}
 		form.password.value = form.password.value.trim();
 		if (form.password.value.length === 0) {
-			alert('Password is required');
+			rq.msgError('Password is required');
 			form.password.focus();
 			return;
 		}
-		fetch('http://localhost:8090/api/v1/members/login', {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
+		const { data, error } = await rq.apiEndPoints().POST('/api/v1/members/login', {
+			body: {
 				username: form.username.value,
 				password: form.password.value
-			})
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+			}
+		});
+		if (data) {
+			rq.msgInfo(data.msg);
+			rq.setLogined(data.data.item);
+			rq.goto('/');
+		} else if (error) {
+			rq.msgError(error.msg);
+		}
 	}
 </script>
 

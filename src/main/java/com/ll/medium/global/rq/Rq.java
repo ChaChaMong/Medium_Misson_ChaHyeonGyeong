@@ -1,6 +1,7 @@
 package com.ll.medium.global.rq;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import jakarta.persistence.EntityManager;
@@ -138,14 +139,56 @@ public class Rq {
         return cookie.getValue();
     }
 
+    public void removeCookie(String name) {
+        Cookie cookie = getCookie(name);
+
+        if (cookie == null) {
+            return;
+        }
+
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);
+    }
+
     public void setLogin(SecurityUser securityUser) {
         SecurityContextHolder.getContext().setAuthentication(securityUser.genAuthentication());
+    }
+
+    public void setLogout() {
+        removeCrossDomainCookie("accessToken");
+        removeCrossDomainCookie("refreshToken");
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    private String getSiteCookieDomain() {
+        String cookieDomain = AppConfig.getSiteCookieDomain();
+
+        if (!cookieDomain.equals("localhost")) {
+            return cookieDomain = "." + cookieDomain;
+        }
+
+        return null;
     }
 
     public void setCrossDomainCookie(String name, String value) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .path("/")
                 .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
+                .build();
+
+        resp.addHeader("Set-Cookie", cookie.toString());
+    }
+
+    public void removeCrossDomainCookie(String name) {
+        removeCookie(name);
+
+        ResponseCookie cookie = ResponseCookie.from(name, null)
+                .path("/")
+                .maxAge(0)
+                .domain(getSiteCookieDomain())
                 .secure(true)
                 .httpOnly(true)
                 .build();

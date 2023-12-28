@@ -20,7 +20,10 @@ public enum SuccessMessage {
     LOGIN_SUCCESS("로그인 성공"),
     JOIN_SUCCESS("가입 성공"),
 
-    REFRESH_TOKEN_SUCCESS("토근 갱신 성공");
+    REFRESH_TOKEN_SUCCESS("토근 갱신 성공"),
+
+    GET_MY_PROFILE_SUCCESS("내 정보 가져오기 성공"),
+    LOGOUT_SUCCESS("로그아웃 성공");
 
     private final String message;
 }
