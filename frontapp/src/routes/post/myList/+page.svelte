@@ -12,14 +12,53 @@
 	});
 </script>
 
-<div>
-	<h1>Posts</h1>
+<svelte:head>
+	<title>내 글 목록</title>
+	<meta name="description" content="내 글 목록" />
+</svelte:head>
 
-	<ul>
-		{#each posts as post}
-			<li>
-				<a href="/posts/{post.id}">{post.id}. {post.title}</a>
-			</li>
-		{/each}
-	</ul>
+<h1 class="font-bold mb-2" style="margin-left: 20px;">
+	<i class="fa-solid fa-list"></i> 내 글 목록
+</h1>
+
+<div class="overflow-x-auto">
+	<div class="flex flex-col max-w-6xl mx-auto md:flex-row">
+		<table class="table">
+			<!-- head -->
+			<thead>
+				<tr>
+					<th class="text-center"></th>
+					<th>제목</th>
+					<th>작성자</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each posts as post}
+					<!-- row -->
+					<tr>
+						<td class="text-center" style="white-space: nowrap; width: 1%;">
+							<span
+								style="font-size: 12px; font-weight: bold;"
+								class={post.published ? 'badge badge-success' : 'badge badge-warning'}
+							>
+								{post.published ? '공개' : '비공개'}
+							</span>
+						</td>
+						<td>
+							<a href={`post/${post.id}`}>
+								<span class="badge badge-outline">{post.id}</span>
+								<span style="word-break: break-all;">{post.title}</span>
+							</a>
+						</td>
+						<td
+							style="cursor: pointer; white-space: nowrap; width: 1%;"
+							on:click={() => (location.href = `/b/${post.authorName}`)}
+						>
+							<span>{post.authorName}</span>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 </div>
