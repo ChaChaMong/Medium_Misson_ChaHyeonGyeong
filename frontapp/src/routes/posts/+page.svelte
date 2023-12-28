@@ -10,7 +10,7 @@
 		(async () => {
 			const { data, error } = await client.GET('/api/v1/posts', {});
 			if (data) {
-				posts = data.data.items;
+				posts = data.data;
 			}
 		})();
 	});

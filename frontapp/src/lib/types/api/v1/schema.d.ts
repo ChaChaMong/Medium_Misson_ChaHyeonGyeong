@@ -72,9 +72,6 @@ export interface components {
       password: string;
       passwordConfirm: string;
     };
-    GetItemsResponseBody: {
-      items: components["schemas"]["PostDto"][];
-    };
     PostDto: {
       /** Format: int64 */
       id: number;
@@ -89,10 +86,10 @@ export interface components {
       body: string;
       published?: boolean;
     };
-    RsDataGetItemsResponseBody: {
+    RsDataListPostDto: {
       resultCode: string;
       msg: string;
-      data: components["schemas"]["GetItemsResponseBody"];
+      data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
       fail: boolean;
@@ -176,7 +173,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetItemsResponseBody"];
+          "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
     };
