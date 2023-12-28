@@ -1,10 +1,13 @@
 package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.util.jwt.JwtUtil;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Map;
 
 @Service
@@ -22,11 +25,23 @@ public class AuthTokenService {
         );
     }
 
-    public String genRefreshToken(Member member) {
-        return genToken(member, 60 * 60 * 24 * 365);
+    public String genRefreshToken() {
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[10];
+        random.nextBytes(bytes);
+        return bytes.toString();
     }
 
     public String genAccessToken(Member member) {
         return genToken(member, 60 * 10);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(AppConfig.getJwtSecretKey()).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -49,7 +49,7 @@ public class ApiV1MembersController {
 
         Member member = memberOp.get();
 
-        String refreshToken = authTokenService.genRefreshToken(member);
+        String refreshToken = member.getRefreshToken();
         String accessToken = authTokenService.genAccessToken(member);
 
         rq.setCrossDomainCookie("refreshToken", refreshToken);

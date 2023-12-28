@@ -3,6 +3,7 @@ package com.ll.medium.domain.member.member.entity;
 import com.ll.medium.global.jpa.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,10 +27,15 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(unique = true)
+    private String refreshToken;
+
+    @Transient
     public boolean isAdmin() {
         return username.equals("admin");
     }
 
+    @Transient
     public List<? extends GrantedAuthority> getAuthorities() {
         return getAuthoritiesAsStringList()
                 .stream()
@@ -37,6 +43,7 @@ public class Member extends BaseEntity {
                 .toList();
     }
 
+    @Transient
     public List<String> getAuthoritiesAsStringList() {
         if (isAdmin()) {
             return List.of("ROLE_ADMIN", "ROLE_MEMBER");

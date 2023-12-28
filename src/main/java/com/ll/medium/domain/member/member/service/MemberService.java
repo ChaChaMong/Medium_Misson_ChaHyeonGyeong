@@ -2,6 +2,10 @@ package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
+import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.exception.ResourceNotFoundException;
+import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
 import com.ll.medium.global.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -29,6 +33,7 @@ public class MemberService {
         Member encodingMember = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
+                .refreshToken(authTokenService.genRefreshToken())
                 .build();
 
         return memberRepository.save(encodingMember);
@@ -73,5 +78,27 @@ public class MemberService {
 
     public boolean existsByUsername(String username) {
         return memberRepository.existsByUsername(username);
+    }
+
+    public RsData<String> refreshAccessToken(String refreshToken) {
+        Member member = memberRepository
+                .findByRefreshToken(refreshToken)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                ErrorMessage.NOT_EXIST_REFRESH_TOKEN.getMessage()
+                        )
+                );
+
+        String accessToken = authTokenService.genAccessToken(member);
+
+        return RsData.of(
+                "200",
+                SuccessMessage.REFRESH_TOKEN_SUCCESS.getMessage(),
+                accessToken
+        );
+    }
+
+    public boolean validateToken(String token) {
+        return authTokenService.validateToken(token);
     }
 }
