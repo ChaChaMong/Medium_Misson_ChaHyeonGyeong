@@ -47,7 +47,7 @@ public class ApiV1PostsController {
         );
     }
 
-    @GetMapping(value = "", consumes = ALL_VALUE)
+    @GetMapping(value = "list", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "글 리스트")
     public RsData<List<PostDto>> getPosts(@RequestParam(value="page", defaultValue="0") int page) {

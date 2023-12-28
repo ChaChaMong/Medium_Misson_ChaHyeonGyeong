@@ -24,7 +24,7 @@
 				</svg>
 			</button>
 			<ul class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-				<li><a href="/post"><i class="fa-solid fa-list"></i> 게시물 목록</a></li>
+				<li><a href="/post/list"><i class="fa-solid fa-list"></i> 게시물 목록</a></li>
 				{#if rq.isLogin()}
 					<li><a href="/post/myList"><i class="fa-solid fa-clipboard-list"></i> 내 글 목록</a></li>
 					<li><a href="/post/write"><i class="fa-solid fa-pen"></i> 게시물 작성</a></li>

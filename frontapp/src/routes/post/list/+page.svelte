@@ -4,7 +4,7 @@
 
 	let posts: components['schemas']['PostDto'][] = $state([]);
 	rq.effect(async () => {
-		const { data } = await rq.apiEndPoints().GET('/api/v1/posts');
+		const { data } = await rq.apiEndPoints().GET('/api/v1/posts/list');
 
 		if (data) {
 			posts = data.data;

@@ -14,8 +14,6 @@ export interface paths {
     delete: operations["deletePost"];
   };
   "/api/v1/posts": {
-    /** 글 리스트 */
-    get: operations["getPosts"];
     /** 글 작성 */
     post: operations["writePost"];
   };
@@ -34,6 +32,10 @@ export interface paths {
   "/api/v1/posts/myList": {
     /** 내 글 리스트 */
     get: operations["getMyPosts"];
+  };
+  "/api/v1/posts/list": {
+    /** 글 리스트 */
+    get: operations["getPosts"];
   };
   "/api/v1/posts/latest": {
     /** 최신 글 리스트 */
@@ -213,22 +215,6 @@ export interface operations {
       };
     };
   };
-  /** 글 리스트 */
-  getPosts: {
-    parameters: {
-      query?: {
-        page?: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataListPostDto"];
-        };
-      };
-    };
-  };
   /** 글 작성 */
   writePost: {
     requestBody: {
@@ -290,6 +276,22 @@ export interface operations {
   };
   /** 내 글 리스트 */
   getMyPosts: {
+    parameters: {
+      query?: {
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataListPostDto"];
+        };
+      };
+    };
+  };
+  /** 글 리스트 */
+  getPosts: {
     parameters: {
       query?: {
         page?: number;
