@@ -39,7 +39,7 @@ public class ApiV1PostsControllerTest {
     void t0() throws Exception {
         //When
         ResultActions resultActions = mvc
-                .perform(get("/api/v1/posts"))
+                .perform(get("/api/v1/posts/list"))
                 .andDo(print());
 
         //Then
