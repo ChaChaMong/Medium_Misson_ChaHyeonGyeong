@@ -17,7 +17,7 @@
 	<meta name="description" content="게시글 목록" />
 </svelte:head>
 
-<h1 class="font-bold mb-2" style="margin-left: 20px;">
+<h1 class="font-bold mb-2 ml-2">
 	<i class="fa-solid fa-list"></i> 게시글 목록
 </h1>
 
@@ -45,7 +45,7 @@
 							</span>
 						</td>
 						<td>
-							<a href={`post/${post.id}`}>
+							<a href={`${post.id}`}>
 								<span class="badge badge-outline">{post.id}</span>
 								<span style="word-break: break-all;">{post.title}</span>
 							</a>
