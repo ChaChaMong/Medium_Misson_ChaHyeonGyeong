@@ -1,7 +1,13 @@
 <script lang="ts">
 	import rq from '$lib/rq/rq.svelte';
 	import '$lib/app.css';
+	import { onMount } from 'svelte';
+
 	const { children } = $props();
+
+	onMount(() => {
+		rq.initAuth();
+	});
 </script>
 
 <nav class="navbar bg-base-100">
