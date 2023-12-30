@@ -84,8 +84,8 @@ export interface components {
       data: components["schemas"]["PostDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -94,8 +94,8 @@ export interface components {
       data: components["schemas"]["Empty"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     LoginRequestDto: {
       username: string;
@@ -115,6 +115,7 @@ export interface components {
       modifyDate: string;
       username: string;
       authorities: string[];
+      paid: boolean;
     };
     RsDataLoginResponseDto: {
       resultCode: string;
@@ -122,8 +123,8 @@ export interface components {
       data: components["schemas"]["LoginResponseDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     JoinRequestDto: {
       username: string;
@@ -136,8 +137,8 @@ export interface components {
       data: components["schemas"]["MemberDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -145,8 +146,8 @@ export interface components {
       data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
   };
   responses: never;

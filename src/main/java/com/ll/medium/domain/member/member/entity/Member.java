@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -30,6 +31,8 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String refreshToken;
 
+    private boolean isPaid = false;
+
     @Transient
     public boolean isAdmin() {
         return username.equals("admin");
@@ -45,10 +48,17 @@ public class Member extends BaseEntity {
 
     @Transient
     public List<String> getAuthoritiesAsStringList() {
+        List<String> authorities = new ArrayList<>();
+        authorities.add("ROLE_MEMBER");
+
         if (isAdmin()) {
-            return List.of("ROLE_ADMIN", "ROLE_MEMBER");
+            authorities.add("ROLE_ADMIN");
         }
 
-        return List.of("ROLE_MEMBER");
+        if (this.isPaid) {
+            authorities.add("ROLE_PAID");
+        }
+
+        return authorities;
     }
 }

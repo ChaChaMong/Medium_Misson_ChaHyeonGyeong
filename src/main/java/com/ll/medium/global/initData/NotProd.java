@@ -40,6 +40,8 @@ public class NotProd {
         Member member1 = memberService.join("user1", "1234");
         Member member2 = memberService.join("user2", "1234");
 
+        memberService.setIsPaid(member1, true);
+
         IntStream.rangeClosed(1, 10).forEach(
                 i -> {
                     String title = "제목" + i;

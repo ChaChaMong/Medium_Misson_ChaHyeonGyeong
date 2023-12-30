@@ -52,6 +52,9 @@
 	<div class="navbar-end">
 		{#if rq.isLogin()}
 			<a class="btn btn-ghost text-xm" href="/member/me">
+				{#if rq.member.paid}
+					<i class="fa-solid fa-dollar-sign"></i>
+				{/if}
 				<span>{rq.member.username}</span>
 			</a>
 		{/if}

@@ -101,4 +101,9 @@ public class MemberService {
     public boolean validateToken(String token) {
         return authTokenService.validateToken(token);
     }
+
+    @Transactional
+    public void setIsPaid(Member member, boolean isPaid) {
+        member.setPaid(isPaid);
+    }
 }

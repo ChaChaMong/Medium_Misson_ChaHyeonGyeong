@@ -17,6 +17,7 @@ class Rq {
 		let createDate = $state('');
 		let modifyDate = $state('');
 		let authorities: string[] = $state([]);
+		let paid = $state(false);
 
 		this.member = {
 			get id() {
@@ -48,6 +49,12 @@ class Rq {
 			},
 			set authorities(value: string[]) {
 				authorities = value;
+			},
+			get paid() {
+				return paid;
+			},
+			set paid(value: boolean) {
+				paid = value;
 			}
 		};
 	}
@@ -77,6 +84,7 @@ class Rq {
 		this.member.modifyDate = member.modifyDate;
 		this.member.username = member.username;
 		this.member.authorities = member.authorities;
+		this.member.paid = member.paid;
 	}
 
 	public setLogout() {
@@ -85,6 +93,7 @@ class Rq {
 		this.member.modifyDate = '';
 		this.member.username = '';
 		this.member.authorities = [];
+		this.member.paid = false;
 	}
 
 	public isLogin() {
@@ -106,14 +115,12 @@ class Rq {
 	}
 
 	public async logout() {
-		const { data, error } = await this.apiEndPoints().POST('/api/v1/members/logout');
+		const { data } = await this.apiEndPoints().POST('/api/v1/members/logout');
 
 		if (data) {
 			this.setLogout();
 			this.goToMain();
 			this.msgInfo(data.msg);
-		} else {
-			this.msgError(error.msg);
 		}
 	}
 

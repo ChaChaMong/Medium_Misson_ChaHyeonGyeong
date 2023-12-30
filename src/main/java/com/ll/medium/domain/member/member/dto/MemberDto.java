@@ -24,6 +24,8 @@ public class MemberDto {
     private String username;
     @NonNull
     private List<String> authorities;
+    @NonNull
+    private boolean isPaid;
 
     public MemberDto(Member member) {
         this.id = member.getId();
@@ -31,5 +33,6 @@ public class MemberDto {
         this.modifyDate = member.getModifyDate();
         this.username = member.getUsername();
         this.authorities = member.getAuthoritiesAsStringList();
+        this.isPaid = member.isPaid();
     }
 }
