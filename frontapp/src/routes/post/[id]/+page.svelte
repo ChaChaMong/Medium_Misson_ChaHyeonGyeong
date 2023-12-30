@@ -21,6 +21,8 @@
 
 		if (data) {
 			post = data.data;
+		} else {
+			rq.msgError(error.msg);
 		}
 	});
 
@@ -43,6 +45,11 @@
 		}
 	}
 </script>
+
+<svelte:head>
+	<title>게시글 내용</title>
+	<meta name="description" content="게시글 내용" />
+</svelte:head>
 
 <h1 class="font-bold mb-2">
 	<i class="fa-regular fa-newspaper"></i> 게시글 내용
