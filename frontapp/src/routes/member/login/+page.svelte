@@ -47,6 +47,7 @@
 			type="text"
 			name="username"
 			id="username-input"
+			autocomplete="on"
 			placeholder="아이디를 입력해주세요."
 			class="input input-bordered"
 		/>
