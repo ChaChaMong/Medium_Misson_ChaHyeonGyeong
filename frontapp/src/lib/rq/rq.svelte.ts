@@ -106,11 +106,15 @@ class Rq {
 	}
 
 	public async logout() {
-		const {} = await this.apiEndPoints().POST('/api/v1/members/logout');
+		const { data, error } = await this.apiEndPoints().POST('/api/v1/members/logout');
 
-		this.setLogout();
-
-		this.goToMain();
+		if (data) {
+			this.setLogout();
+			this.goToMain();
+			this.msgInfo(data.msg);
+		} else {
+			this.msgError(error.msg);
+		}
 	}
 
 	public shouldLogoutPage() {
