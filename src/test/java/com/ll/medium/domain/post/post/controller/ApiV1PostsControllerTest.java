@@ -414,7 +414,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("writePost"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(41))))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(139))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
