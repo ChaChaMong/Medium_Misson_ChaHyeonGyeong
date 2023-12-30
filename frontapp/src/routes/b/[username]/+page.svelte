@@ -23,7 +23,7 @@
 
 <svelte:head>
 	<title>{urlUsername} 게시글 목록</title>
-	<meta name="description" content="{urlUsername}게시글 목록" />
+	<meta name="description" content="{urlUsername} 게시글 목록" />
 </svelte:head>
 
 <h1 class="font-bold mb-2">
