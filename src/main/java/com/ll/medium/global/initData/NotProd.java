@@ -68,5 +68,18 @@ public class NotProd {
                     if (i % 2 == 0) postService.setIsPaid(post, true);
                 }
         );
+
+
+        IntStream.rangeClosed(3, 100).forEach(
+                i -> {
+                    Member member = memberService.join("user" + i, "1234");
+                    member.setPaid(true);
+
+                    String title = member.getUsername() + "의 유료글 제목";
+                    String body = member.getUsername() + "의 유료글 내용";
+                    Post post = postService.write(member, title, body, true);
+                    postService.setIsPaid(post, true);
+                }
+        );
     }
 }
