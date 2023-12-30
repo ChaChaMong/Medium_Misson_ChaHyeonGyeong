@@ -23,6 +23,25 @@
 			post = data.data;
 		}
 	});
+
+	async function confirmDelete() {
+		if (confirm('정말로 삭제하시겠습니까?')) {
+			const { data, error } = await rq.apiEndPoints().DELETE('/api/v1/posts/{id}', {
+				params: {
+					path: {
+						id: parseInt($page.params.id)
+					}
+				}
+			});
+
+			if (data) {
+				rq.msgInfo(data.msg);
+				rq.goto('/post/myList');
+			} else {
+				rq.msgError(error.msg);
+			}
+		}
+	}
 </script>
 
 <h1 class="font-bold mb-2 ml-2">
@@ -55,6 +74,8 @@
 	<hr class="mt-2" />
 
 	<div class="mt-2 flex gap-2 justify-center">
+		<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
+		<button class="btn btn-error btn-sm" on:click={confirmDelete}>글 삭제</button>
 		<!-- TODO: 수정, 삭제 조건 api단에서 가져오기 -->
 		<!-- {#if canModify($rq.getMember(), post)}
 			<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
