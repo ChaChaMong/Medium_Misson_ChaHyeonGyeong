@@ -17,7 +17,7 @@
 	<meta name="description" content="홈 화면" />
 </svelte:head>
 
-<h1 class="font-bold mb-2" style="margin-left: 20px;">
+<h1 class="font-bold mb-2">
 	<i class="fa-solid fa-house-chimney"></i> 최신 글
 </h1>
 

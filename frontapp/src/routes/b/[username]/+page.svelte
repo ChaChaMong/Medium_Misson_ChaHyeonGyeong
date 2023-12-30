@@ -26,7 +26,7 @@
 	<meta name="description" content="{urlUsername}게시글 목록" />
 </svelte:head>
 
-<h1 class="font-bold mb-2 ml-2">
+<h1 class="font-bold mb-2">
 	<i class="fa-solid fa-list"></i>
 	{urlUsername} 게시글 목록
 </h1>

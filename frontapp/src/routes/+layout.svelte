@@ -58,6 +58,6 @@
 	</div>
 </nav>
 
-<main>
+<main class="p-4">
 	{@render children()}
 </main>

@@ -44,7 +44,7 @@
 	}
 </script>
 
-<h1 class="font-bold mb-2 ml-2">
+<h1 class="font-bold mb-2">
 	<i class="fa-regular fa-newspaper"></i> 게시글 내용
 </h1>
 <hr />
