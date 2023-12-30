@@ -80,10 +80,16 @@
 	</div>
 
 	<div class="form-control">
-		<label class="label">
+		<label class="label" for="published-input">
 			<div style="display: flex; align-items: center;">
 				<span class="label-text" style="margin-right: 10px;">글 공개</span>
-				<input type="checkbox" bind:checked={post.published} class="toggle toggle-lg" />
+				<input
+					name="published"
+					id="published-input"
+					type="checkbox"
+					bind:checked={post.published}
+					class="toggle toggle-lg"
+				/>
 			</div>
 		</label>
 	</div>
