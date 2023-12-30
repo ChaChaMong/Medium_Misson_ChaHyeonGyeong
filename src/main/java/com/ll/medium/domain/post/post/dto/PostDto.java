@@ -24,6 +24,8 @@ public class PostDto {
     private final String body;
     @NonNull
     private final boolean isPublished;
+    @NonNull
+    private final boolean isPaid;
 
     public PostDto(Post post) {
         this.id = post.getId();
@@ -34,5 +36,6 @@ public class PostDto {
         this.title  = post.getTitle();
         this.body = post.getBody();
         this.isPublished = post.isPublished();
+        this.isPaid = post.isPaid();
     }
 }

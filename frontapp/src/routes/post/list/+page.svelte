@@ -49,6 +49,10 @@
 								<span class="badge badge-outline">{post.id}</span>
 								<span style="word-break: break-all;">{post.title}</span>
 							</a>
+
+							{#if post.paid}
+								<i class="fa-solid fa-coins" style="color:orange;"></i>
+							{/if}
 						</td>
 						<td
 							style="cursor: pointer; white-space: nowrap; width: 1%;"

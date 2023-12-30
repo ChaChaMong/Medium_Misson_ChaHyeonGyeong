@@ -1,8 +1,9 @@
 package com.ll.medium.global.initData;
 
-import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.domain.post.post.entity.Post;
+import com.ll.medium.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -46,7 +47,8 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    postService.write(member1, title, body, true);
+                    Post post = postService.write(member1, title, body, true);
+                    if (i % 2 == 0) postService.setIsPaid(post, true);
                 }
         );
 
@@ -62,7 +64,8 @@ public class NotProd {
                 i -> {
                     String title = "제목" + i;
                     String body = "내용" + i;
-                    postService.write(member2, title, body, true);
+                    Post post = postService.write(member2, title, body, true);
+                    if (i % 2 == 0) postService.setIsPaid(post, true);
                 }
         );
     }

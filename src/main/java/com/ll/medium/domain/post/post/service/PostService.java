@@ -94,4 +94,9 @@ public class PostService {
 
         return post.getAuthor().equals(author);
     }
+
+    @Transactional
+    public void setIsPaid(Post post, boolean isPaid) {
+        post.setPaid(isPaid);
+    }
 }

@@ -65,6 +65,9 @@
 					{post.published ? '공개' : '비공개'}
 				</p>
 				<h2 class="mt-2 text-3xl font-extrabold leading-9" style="word-break: break-all;">
+					{#if post.paid}
+						<i class="fa-solid fa-coins" style="color:orange;"></i>
+					{/if}
 					{post.title}
 				</h2>
 				<p class="mt-4">작성자 : {post.authorName}</p>
@@ -73,7 +76,13 @@
 				<!-- TODO: 날짜 포맷 처리 'yy.MM.dd HH:mm:ss' -->
 			</div>
 			<dl class="w-full md:w-2/3 whitespace-pre-line" style="word-break: break-all;">
-				{post.body}
+				{#if post.paid && !rq.member.paid}
+					<p style="color:orange; font-weight:bold; font-size:large">
+						[이 글은 유료멤버십전용 입니다.]
+					</p>
+				{:else}
+					{post.body}
+				{/if}
 			</dl>
 		</div>
 	</div>

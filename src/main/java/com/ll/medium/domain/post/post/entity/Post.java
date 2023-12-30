@@ -30,5 +30,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String body;
 
-    private boolean isPublished;
+    private boolean isPublished = false;
+
+    private boolean isPaid = false;
 }
