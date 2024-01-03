@@ -63,7 +63,7 @@
 								</span>
 							</td>
 							<td>
-								<a href={`post/${post.id}`}>
+								<a href={`${post.authorName}/${post.id}`}>
 									<span class="badge badge-outline">{post.id}</span>
 									<span style="word-break: break-all;">{post.title}</span>
 								</a>
