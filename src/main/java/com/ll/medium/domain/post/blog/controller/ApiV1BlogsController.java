@@ -5,17 +5,22 @@ import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.common.ErrorMessage;
 import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,18 +40,22 @@ public class ApiV1BlogsController {
     @GetMapping(value = "/{username}", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "특정 사용자의 글 리스트")
-    public RsData<List<PostDto>> getPostsByUsername(
+    public RsData<PageDto<PostDto>> getPostsByUsername(
             @PathVariable String username,
-            @RequestParam(value = "page", defaultValue = "0") int page
+            @RequestParam(defaultValue = "0") int page
     ) {
         Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.MEMBER_NOT_FOUND.getMessage()));
-        Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(member.getId(), page);
+
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
+
+        Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(member.getId(), pageable);
         List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
                 SuccessMessage.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername()),
-                postDtos
+                new PageDto<>(pagePosts)
         );
     }
 

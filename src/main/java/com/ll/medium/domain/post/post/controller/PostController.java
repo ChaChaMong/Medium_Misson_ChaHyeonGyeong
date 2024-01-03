@@ -3,11 +3,14 @@ package com.ll.medium.domain.post.post.controller;
 import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,8 @@ public class PostController {
 
     @GetMapping("/list")
     public String showList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-        Page<Post> paging = this.postService.findByIsPublishedOrderByIdDesc(true, page);
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
+        Page<Post> paging = this.postService.findByIsPublishedOrderByIdDesc(true, pageable);
         model.addAttribute("paging", paging);
         model.addAttribute("detailUrl", "/post");
 
@@ -32,7 +36,8 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
     public String showMyList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
-        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
+        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), pageable);
         model.addAttribute("paging", posts);
         model.addAttribute("detailUrl", "/post");
 

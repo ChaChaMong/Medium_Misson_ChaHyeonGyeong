@@ -4,18 +4,23 @@ import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.common.ErrorMessage;
 import com.ll.medium.global.common.SuccessMessage;
 import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
+import com.ll.medium.standard.base.PageDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,28 +55,38 @@ public class ApiV1PostsController {
     @GetMapping(value = "list", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "글 리스트")
-    public RsData<List<PostDto>> getPosts(@RequestParam(value="page", defaultValue="0") int page) {
-        Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, page);
+    public RsData<PageDto<PostDto>> getPosts(
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
+
+        Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, pageable);
         List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
                 SuccessMessage.GET_POSTS_SUCCESS.getMessage(),
-                postDtos
+                new PageDto<>(pagePosts)
         );
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/myList", consumes = ALL_VALUE)
     @Operation(summary = "내 글 리스트")
-    public RsData<List<PostDto>> getMyPosts(@RequestParam(value="page", defaultValue="0") int page) {
-        Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), page);
+    public RsData<PageDto<PostDto>> getMyPosts(
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
+
+        Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), pageable);
         List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
                 SuccessMessage.GET_MY_POSTS_SUCCESS.getMessage(),
-                postDtos
+                new PageDto<>(pagePosts)
         );
     }
 

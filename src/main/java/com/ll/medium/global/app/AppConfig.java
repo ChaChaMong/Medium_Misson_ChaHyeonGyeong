@@ -87,4 +87,7 @@ public class AppConfig {
     public void setSiteName(String name) {
         AppConfig.siteName = name;
     }
+
+    @Getter
+    public static int basePageSize = 10;
 }

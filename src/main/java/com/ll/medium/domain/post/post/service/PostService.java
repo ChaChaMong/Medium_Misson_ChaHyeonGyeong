@@ -5,7 +5,6 @@ import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +26,11 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
-    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, Pageable pageable) {
         return postRepository.findByIsPublishedOrderByIdDesc(isPublished, pageable);
     }
 
-    public Page<Post> findByAuthorIdOrderByIdDesc(long authorId, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<Post> findByAuthorIdOrderByIdDesc(long authorId, Pageable pageable) {
         return postRepository.findByAuthorIdOrderByIdDesc(authorId, pageable);
     }
 

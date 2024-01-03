@@ -85,8 +85,8 @@ export interface components {
       data: components["schemas"]["PostDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     Empty: Record<string, never>;
     RsDataEmpty: {
@@ -95,8 +95,8 @@ export interface components {
       data: components["schemas"]["Empty"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     LoginRequestDto: {
       username: string;
@@ -124,8 +124,8 @@ export interface components {
       data: components["schemas"]["LoginResponseDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     JoinRequestDto: {
       username: string;
@@ -138,8 +138,30 @@ export interface components {
       data: components["schemas"]["MemberDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
+    };
+    PageDtoPostDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["PostDto"][];
+      hasPrevious: boolean;
+      hasNext: boolean;
+    };
+    RsDataPageDtoPostDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["PageDtoPostDto"];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -147,8 +169,8 @@ export interface components {
       data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
   };
   responses: never;
@@ -287,7 +309,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPostDto"];
+          "application/json": components["schemas"]["RsDataPageDtoPostDto"];
         };
       };
     };
@@ -303,7 +325,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPostDto"];
+          "application/json": components["schemas"]["RsDataPageDtoPostDto"];
         };
       };
     };
@@ -344,7 +366,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataListPostDto"];
+          "application/json": components["schemas"]["RsDataPageDtoPostDto"];
         };
       };
     };
