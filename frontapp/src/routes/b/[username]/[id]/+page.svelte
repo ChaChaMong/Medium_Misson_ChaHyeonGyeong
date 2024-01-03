@@ -23,6 +23,7 @@
 		if (data) {
 			post = data.data;
 		} else {
+			rq.goBack();
 			rq.msgError(error.msg);
 		}
 	});
