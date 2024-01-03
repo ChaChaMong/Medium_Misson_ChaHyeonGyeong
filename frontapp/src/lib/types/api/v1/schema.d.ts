@@ -63,6 +63,16 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    Empty: Record<string, never>;
+    RsDataEmpty: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["Empty"];
+      /** Format: int32 */
+      statusCode: number;
+      success: boolean;
+      fail: boolean;
+    };
     PostRequestDto: {
       title: string;
       body: string;
@@ -87,18 +97,8 @@ export interface components {
       data: components["schemas"]["PostDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
-    };
-    Empty: Record<string, never>;
-    RsDataEmpty: {
-      resultCode: string;
-      msg: string;
-      data: components["schemas"]["Empty"];
-      /** Format: int32 */
-      statusCode: number;
       fail: boolean;
-      success: boolean;
     };
     LoginRequestDto: {
       username: string;
@@ -126,8 +126,8 @@ export interface components {
       data: components["schemas"]["LoginResponseDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     JoinRequestDto: {
       username: string;
@@ -140,8 +140,8 @@ export interface components {
       data: components["schemas"]["MemberDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     PageDtoPostDto: {
       /** Format: int64 */
@@ -162,8 +162,8 @@ export interface components {
       data: components["schemas"]["PageDtoPostDto"];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -171,8 +171,8 @@ export interface components {
       data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
@@ -202,6 +202,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 글 수정 */
@@ -223,6 +229,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 글 삭제 */
@@ -237,6 +249,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataPostDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -255,6 +273,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 로그아웃 */
@@ -264,6 +288,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -282,6 +312,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataLoginResponseDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 회원가입 */
@@ -296,6 +332,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataMemberDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -314,6 +356,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 내 글 리스트 */
@@ -328,6 +376,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataPageDtoPostDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -346,6 +400,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPageDtoPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 최신 글 리스트 */
@@ -357,6 +417,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataListPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 내 정보 */
@@ -366,6 +432,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataMemberDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
@@ -387,6 +459,12 @@ export interface operations {
           "application/json": components["schemas"]["RsDataPageDtoPostDto"];
         };
       };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
     };
   };
   /** 특정 사용자의 글 상세 조회 */
@@ -402,6 +480,12 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataPostDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
     };
