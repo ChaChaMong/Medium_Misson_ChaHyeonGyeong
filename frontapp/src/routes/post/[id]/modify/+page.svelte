@@ -14,7 +14,7 @@
 
 	// 페이지에 진입할 때 해당 게시물의 정보를 불러옵니다.
 	rq.effect(async () => {
-		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}', {
+		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/modify', {
 			params: {
 				path: {
 					id: parseInt($page.params.id)

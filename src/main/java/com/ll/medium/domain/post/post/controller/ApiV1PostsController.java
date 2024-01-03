@@ -119,6 +119,21 @@ public class ApiV1PostsController {
         );
     }
 
+    @GetMapping(value = "/{id}/modify", consumes = ALL_VALUE)
+    @Operation(summary = "수정 화면 글 조회")
+    public RsData<PostDto> showModify(@PathVariable long id) {
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
+
+        PostDto postDto = new PostDto(post);
+
+        return RsData.of(
+                "200",
+                SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                postDto
+        );
+    }
+
     @PreAuthorize("isAuthenticated()")
     @PutMapping(value = "/{id}")
     @Operation(summary = "글 수정")

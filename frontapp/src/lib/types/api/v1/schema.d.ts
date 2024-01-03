@@ -29,6 +29,10 @@ export interface paths {
     /** 회원가입 */
     post: operations["join"];
   };
+  "/api/v1/posts/{id}/modify": {
+    /** 수정 화면 글 조회 */
+    get: operations["showModify"];
+  };
   "/api/v1/posts/myList": {
     /** 내 글 리스트 */
     get: operations["getMyPosts"];
@@ -292,6 +296,22 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataMemberDto"];
+        };
+      };
+    };
+  };
+  /** 수정 화면 글 조회 */
+  showModify: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataPostDto"];
         };
       };
     };
