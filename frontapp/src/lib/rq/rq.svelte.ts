@@ -161,6 +161,10 @@ class Rq {
 			fn();
 		});
 	}
+
+	public goBack() {
+		window.history.back();
+	}
 }
 
 const rq = new Rq();
