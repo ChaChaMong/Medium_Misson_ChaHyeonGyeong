@@ -67,17 +67,15 @@ export interface components {
     PostDto: {
       /** Format: int64 */
       id: number;
-      /** Format: date-time */
       createDate: string;
-      /** Format: date-time */
       modifyDate: string;
       /** Format: int64 */
       authorId: number;
       authorName: string;
       title: string;
       body: string;
-      published: boolean;
       paid: boolean;
+      published: boolean;
     };
     RsDataPostDto: {
       resultCode: string;

@@ -73,7 +73,6 @@
 				<p class="mt-4">작성자 : {post.authorName}</p>
 				<p class="mt-2">등록 일시 : {post.createDate}</p>
 				<p class="mb-2">수정 일시 : {post.modifyDate}</p>
-				<!-- TODO: 날짜 포맷 처리 'yy.MM.dd HH:mm:ss' -->
 			</div>
 			<dl class="w-full md:w-2/3 whitespace-pre-line" style="word-break: break-all;">
 				{#if post.paid && !rq.member.paid}
