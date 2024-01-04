@@ -478,4 +478,83 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data[0].published", instanceOf(Boolean.class)))
                 .andExpect(jsonPath("$.data.length()", is(30)));
     }
+
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/modify - 200 (로그인)")
+    @WithUserDetails("user1")
+    void t7_1() throws Exception {
+        //When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/modify"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("showModify"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.authorId", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.authorName", notNullValue()))
+                .andExpect(jsonPath("$.data.title", notNullValue()))
+                .andExpect(jsonPath("$.data.body", notNullValue()))
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/modify - 403 (로그인)")
+    @WithUserDetails("user2")
+    void t7_2() throws Exception {
+        //When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/modify"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().is4xxClientError())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("showModify"))
+                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_MODIFY_PERMISSION.getMessage())));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1000/modify - 404")
+    void t7_3() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1000/modify"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().is4xxClientError())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("showModify"))
+                .andExpect(jsonPath("$.resultCode", is("404")))
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.POST_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/modify - 403 (비로그인)")
+    void t7_4() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/modify"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().is4xxClientError())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("showModify"))
+                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_MODIFY_PERMISSION.getMessage())));
+    }
 }
