@@ -119,6 +119,7 @@ public class ApiV1PostsController {
         );
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/{id}/modify", consumes = ALL_VALUE)
     @Operation(summary = "수정 화면 글 조회")
     public RsData<PostDto> showModify(@PathVariable long id) {

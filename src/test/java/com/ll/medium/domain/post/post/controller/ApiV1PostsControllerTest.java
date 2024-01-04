@@ -525,7 +525,8 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1000/modify - 404")
+    @DisplayName("GET /api/v1/posts/1000/modify - 404 (로그인)")
+    @WithUserDetails("user1")
     void t7_3() throws Exception {
         // When
         ResultActions resultActions = mvc
@@ -555,6 +556,6 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("showModify"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_MODIFY_PERMISSION.getMessage())));
+                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_LOGGED_IN.getMessage())));
     }
 }
