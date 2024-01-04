@@ -44,14 +44,14 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().methodName("getPostsByUsername"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
                 .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted("user1"))))
-                .andExpect(jsonPath("$.data[0].id", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.data[0].createDate", matchesPattern(DATE_PATTERN)))
-                .andExpect(jsonPath("$.data[0].modifyDate", matchesPattern(DATE_PATTERN)))
-                .andExpect(jsonPath("$.data[0].authorId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.data[0].authorName", notNullValue()))
-                .andExpect(jsonPath("$.data[0].title", notNullValue()))
-                .andExpect(jsonPath("$.data[0].body", notNullValue()))
-                .andExpect(jsonPath("$.data[0].published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.content[0].id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.content[0].createDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.content[0].modifyDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.content[0].authorId", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.content[0].authorName", notNullValue()))
+                .andExpect(jsonPath("$.data.content[0].title", notNullValue()))
+                .andExpect(jsonPath("$.data.content[0].body", notNullValue()))
+                .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)));
     }
 
     @Test
