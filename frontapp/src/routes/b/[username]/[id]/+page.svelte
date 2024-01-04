@@ -3,6 +3,7 @@
 	import type { components } from '$lib/types/api/v1/schema';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { formatDate } from '$lib/common/dateUtils';
 
 	onMount(() => {
 		$page.params.id;
@@ -73,8 +74,8 @@
 					{post.title}
 				</h2>
 				<p class="mt-4">작성자 : {post.authorName}</p>
-				<p class="mt-2">등록 일시 : {post.createDate}</p>
-				<p class="mb-2">수정 일시 : {post.modifyDate}</p>
+				<p class="mt-2">등록 일시 : {formatDate(new Date(post.createDate))}</p>
+				<p class="mb-2">수정 일시 : {formatDate(new Date(post.modifyDate))}</p>
 			</div>
 			<dl class="w-full md:w-2/3 whitespace-pre-line" style="word-break: break-all;">
 				{#if post.paid && !rq.member.paid}

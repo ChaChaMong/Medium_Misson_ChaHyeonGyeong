@@ -70,8 +70,8 @@ export interface components {
       data: components["schemas"]["Empty"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     PostRequestDto: {
       title: string;
@@ -81,15 +81,17 @@ export interface components {
     PostDto: {
       /** Format: int64 */
       id: number;
+      /** Format: date-time */
       createDate: string;
+      /** Format: date-time */
       modifyDate: string;
       /** Format: int64 */
       authorId: number;
       authorName: string;
       title: string;
       body: string;
-      paid: boolean;
       published: boolean;
+      paid: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
@@ -97,8 +99,8 @@ export interface components {
       data: components["schemas"]["PostDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     LoginRequestDto: {
       username: string;
@@ -126,8 +128,8 @@ export interface components {
       data: components["schemas"]["LoginResponseDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     JoinRequestDto: {
       username: string;
@@ -140,8 +142,8 @@ export interface components {
       data: components["schemas"]["MemberDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     PageDtoPostDto: {
       /** Format: int64 */
@@ -162,8 +164,8 @@ export interface components {
       data: components["schemas"]["PageDtoPostDto"];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
     RsDataListPostDto: {
       resultCode: string;
@@ -171,8 +173,8 @@ export interface components {
       data: components["schemas"]["PostDto"][];
       /** Format: int32 */
       statusCode: number;
-      success: boolean;
       fail: boolean;
+      success: boolean;
     };
   };
   responses: never;
