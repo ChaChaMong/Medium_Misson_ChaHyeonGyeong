@@ -2,7 +2,7 @@
 	import rq from '$lib/rq/rq.svelte';
 	import type { components } from '$lib/types/api/v1/schema';
 	import { page } from '$app/stores';
-	import Pagination from '../../common/Pagenation.svelte';
+	import Pagination from '$lib/components/Pagenation.svelte';
 
 	const urlUsername = $page.params.username;
 

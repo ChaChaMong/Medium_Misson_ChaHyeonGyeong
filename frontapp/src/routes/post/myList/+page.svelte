@@ -2,7 +2,7 @@
 	import rq from '$lib/rq/rq.svelte';
 	import type { components } from '$lib/types/api/v1/schema';
 	import { page } from '$app/stores';
-	import Pagination from '../../common/Pagenation.svelte';
+	import Pagination from '$lib/components/Pagenation.svelte';
 
 	let postPage: components['schemas']['PageDtoPostDto'] | null = $state(null);
 
@@ -36,7 +36,6 @@
 	<div class="overflow-x-auto">
 		<div class="flex flex-col max-w-6xl mx-auto md:flex-row">
 			<table class="table">
-				<!-- head -->
 				<thead>
 					<tr>
 						<th class="text-center"></th>

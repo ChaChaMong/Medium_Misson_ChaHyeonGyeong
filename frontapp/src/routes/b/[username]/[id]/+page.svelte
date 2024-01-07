@@ -3,7 +3,7 @@
 	import type { components } from '$lib/types/api/v1/schema';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { formatDate } from '$lib/common/dateUtils';
+	import { formatDate } from '$lib/utils/dateUtils';
 
 	onMount(() => {
 		$page.params.id;
