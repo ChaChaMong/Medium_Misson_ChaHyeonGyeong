@@ -6,9 +6,7 @@ import org.springframework.lang.NonNull;
 
 @Getter
 @AllArgsConstructor
-public class PostPermissionDto {
-    @NonNull
-    private final boolean canAccess;
+public class PostControlPermissionDto {
     @NonNull
     private final boolean canModify;
     @NonNull

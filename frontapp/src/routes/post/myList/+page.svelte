@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import Pagination from '$lib/components/Pagenation.svelte';
 
-	let postPage: components['schemas']['PageDtoPostDto'] | null = $state(null);
+	let postPage: components['schemas']['PageDtoPostListDto'] | null = $state(null);
 
 	rq.effect(async () => {
 		const page_ = $page.url.searchParams.get('page') ?? '0';

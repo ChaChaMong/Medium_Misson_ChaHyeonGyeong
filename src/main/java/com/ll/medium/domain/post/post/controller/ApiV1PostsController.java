@@ -1,7 +1,8 @@
 package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.dto.PostDto;
-import com.ll.medium.domain.post.post.dto.PostPermissionDto;
+import com.ll.medium.domain.post.post.dto.PostListDto;
+import com.ll.medium.domain.post.post.dto.PostControlPermissionDto;
 import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
@@ -41,9 +42,9 @@ public class ApiV1PostsController {
     @GetMapping(value = "latest", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "최신 글 리스트")
-    public RsData<List<PostDto>> getLatestPosts() {
+    public RsData<List<PostListDto>> getLatestPosts() {
         List<Post> postEntities = postService.findTop30ByIsPublishedOrderByIdDesc(true);
-        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
+        List<PostListDto> postDtos = postEntities.stream().map(PostListDto::new).toList();
 
         return RsData.of(
                 "200",
@@ -55,13 +56,13 @@ public class ApiV1PostsController {
     @GetMapping(value = "list", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "글 리스트")
-    public RsData<PageDto<PostDto>> getPosts(
+    public RsData<PageDto<PostListDto>> getPosts(
             @RequestParam(defaultValue = "0") int page
     ) {
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, pageable);
-        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
-        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
+        List<PostListDto> postDtos = postEntities.stream().map(PostListDto::new).toList();
+        Page<PostListDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
@@ -73,13 +74,13 @@ public class ApiV1PostsController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/myList", consumes = ALL_VALUE)
     @Operation(summary = "내 글 리스트")
-    public RsData<PageDto<PostDto>> getMyPosts(
+    public RsData<PageDto<PostListDto>> getMyPosts(
             @RequestParam(defaultValue = "0") int page
     ) {
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), pageable);
-        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
-        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
+        List<PostListDto> postDtos = postEntities.stream().map(PostListDto::new).toList();
+        Page<PostListDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
@@ -171,16 +172,16 @@ public class ApiV1PostsController {
         );
     }
 
-    @GetMapping(value = "/{id}/permission", consumes = ALL_VALUE)
-    @Operation(summary = "게시글 권한 조회")
-    public RsData<PostPermissionDto> getPostPermission(@PathVariable long id) {
+    @GetMapping(value = "/{id}/controlPermission", consumes = ALL_VALUE)
+    @Operation(summary = "게시글 제어 권한 조회")
+    public RsData<PostControlPermissionDto> getControlPermission(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
+        PostControlPermissionDto permission = postService.getContolPermissions(rq.getMember(), post);
 
         return RsData.of(
                 "200",
-                Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(post.getId()),
+                Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(post.getId()),
                 permission
         );
     }

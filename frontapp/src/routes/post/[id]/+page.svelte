@@ -11,7 +11,7 @@
 	});
 
 	let post: components['schemas']['PostDto'] | null = $state(null);
-	let permission: components['schemas']['PostPermissionDto'] | null = $state(null);
+	let permission: components['schemas']['PostControlPermissionDto'] | null = $state(null);
 
 	async function getPost() {
 		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}', {
@@ -31,7 +31,7 @@
 	}
 
 	async function getPermission() {
-		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/permission', {
+		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/controlPermission', {
 			params: {
 				path: {
 					id: parseInt($page.params.id)

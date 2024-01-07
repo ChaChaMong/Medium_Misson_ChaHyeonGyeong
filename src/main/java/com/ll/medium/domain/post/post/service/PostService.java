@@ -1,7 +1,7 @@
 package com.ll.medium.domain.post.post.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
-import com.ll.medium.domain.post.post.dto.PostPermissionDto;
+import com.ll.medium.domain.post.post.dto.PostControlPermissionDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -98,9 +98,8 @@ public class PostService {
         post.setPaid(isPaid);
     }
 
-    public PostPermissionDto getPermissions(Member author, Post post) {
-        return new PostPermissionDto(
-                canAccess(author, post),
+    public PostControlPermissionDto getContolPermissions(Member author, Post post) {
+        return new PostControlPermissionDto(
                 canModify(author, post),
                 canDelete(author, post)
         );
