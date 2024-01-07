@@ -2,8 +2,7 @@ package com.ll.medium.domain.member.member.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.global.security.SecurityUser;
@@ -85,7 +84,7 @@ public class MemberService {
                 .findByRefreshToken(refreshToken)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                ErrorMessage.NOT_EXIST_REFRESH_TOKEN.getMessage()
+                                Message.Error.NOT_EXIST_REFRESH_TOKEN.getMessage()
                         )
                 );
 
@@ -93,7 +92,7 @@ public class MemberService {
 
         return RsData.of(
                 "200",
-                SuccessMessage.REFRESH_TOKEN_SUCCESS.getMessage(),
+                Message.Success.REFRESH_TOKEN_SUCCESS.getMessage(),
                 accessToken
         );
     }

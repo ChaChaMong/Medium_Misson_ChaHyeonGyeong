@@ -1,7 +1,6 @@
 package com.ll.medium.domain.member.member.controller;
 
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("login"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.LOGIN_SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.msg", is(Message.Success.LOGIN_SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data.item.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.item.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.item.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -78,7 +77,7 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("login"))
                 .andExpect(jsonPath("$.resultCode", is("404")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.LOGIN_FAIL.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.LOGIN_FAIL.getMessage())));
     }
 
 
@@ -104,7 +103,7 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("login"))
                 .andExpect(jsonPath("$.resultCode", is("404")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.LOGIN_FAIL.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.LOGIN_FAIL.getMessage())));
     }
 
     @Test
@@ -130,7 +129,7 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.JOIN_SUCCESS.getMessage())))
+                .andExpect(jsonPath("$.msg", is(Message.Success.JOIN_SUCCESS.getMessage())))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -160,7 +159,7 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(jsonPath("$.resultCode", is("404")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.NOT_MATCH_PASSWORD.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.NOT_MATCH_PASSWORD.getMessage())));
     }
 
     @Test
@@ -186,6 +185,6 @@ public class ApiV1MembersControllerTest {
                 .andExpect(handler().handlerType(ApiV1MembersController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(jsonPath("$.resultCode", is("404")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.EXIST_USERNAME.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.EXIST_USERNAME.getMessage())));
     }
 }

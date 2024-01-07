@@ -1,8 +1,7 @@
 package com.ll.medium.domain.post.blog.controller;
 
 import com.ll.medium.domain.post.post.service.PostService;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostsByUsername"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted("user1"))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted("user1"))))
                 .andExpect(jsonPath("$.data.content[0].id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.content[0].createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.content[0].modifyDate", matchesPattern(DATE_PATTERN)))
@@ -70,7 +69,7 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostById"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted("user1", 1))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted("user1", 1))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -98,7 +97,7 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostById"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(SuccessMessage.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted("user1", 11))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted("user1", 11))))
                 .andExpect(jsonPath("$.data.id", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.data.createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.modifyDate", matchesPattern(DATE_PATTERN)))
@@ -126,7 +125,7 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostById"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_ACCESS.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.NO_ACCESS.getMessage())));
     }
 
     @Test
@@ -143,7 +142,7 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostById"))
                 .andExpect(jsonPath("$.resultCode", is("403")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.NO_ACCESS.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.NO_ACCESS.getMessage())));
     }
 
     @Test
@@ -160,6 +159,6 @@ public class ApiV1BlogsControllerTest {
                 .andExpect(handler().handlerType(ApiV1BlogsController.class))
                 .andExpect(handler().methodName("getPostById"))
                 .andExpect(jsonPath("$.resultCode", is("404")))
-                .andExpect(jsonPath("$.msg", is(ErrorMessage.POST_NOT_FOUND.getMessage())));
+                .andExpect(jsonPath("$.msg", is(Message.Error.POST_NOT_FOUND.getMessage())));
     }
 }

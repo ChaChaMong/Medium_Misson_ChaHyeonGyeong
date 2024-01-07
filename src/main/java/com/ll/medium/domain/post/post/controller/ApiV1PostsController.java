@@ -6,8 +6,7 @@ import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.app.AppConfig;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
@@ -48,7 +47,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_LATEST_POSTS_SUCCESS.getMessage(),
+                Message.Success.GET_LATEST_POSTS_SUCCESS.getMessage(),
                 postDtos
         );
     }
@@ -66,7 +65,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_POSTS_SUCCESS.getMessage(),
+                Message.Success.GET_POSTS_SUCCESS.getMessage(),
                 new PageDto<>(pagePosts)
         );
     }
@@ -84,7 +83,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_MY_POSTS_SUCCESS.getMessage(),
+                Message.Success.GET_MY_POSTS_SUCCESS.getMessage(),
                 new PageDto<>(pagePosts)
         );
     }
@@ -101,16 +100,16 @@ public class ApiV1PostsController {
     @GetMapping(value = "/{id}", consumes = ALL_VALUE)
     @Operation(summary = "글 상세 조회")
     public RsData<PostDto> getPost(@PathVariable long id) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
         PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());
+        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
 
         PostDto postDto = new PostDto(post, permission);
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                Message.Success.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -126,7 +125,7 @@ public class ApiV1PostsController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.WRITE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                Message.Success.WRITE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -135,16 +134,16 @@ public class ApiV1PostsController {
     @GetMapping(value = "/{id}/modify", consumes = ALL_VALUE)
     @Operation(summary = "수정 화면 글 조회")
     public RsData<PostDto> showModify(@PathVariable long id) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
         PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanModify()) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
+        if (!permission.isCanModify()) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
 
         PostDto postDto = new PostDto(post, permission);
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                Message.Success.GET_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -156,17 +155,17 @@ public class ApiV1PostsController {
             @PathVariable long id,
             @Valid @RequestBody PostRequestDto postRequestDto
     ) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
         PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanModify()) throw new CustomAccessDeniedException(ErrorMessage.NO_MODIFY_PERMISSION.getMessage());
+        if (!permission.isCanModify()) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
 
         postService.modify(post, postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
         PostDto postDto = new PostDto(post, permission);
 
         return RsData.of(
                 "200",
-                SuccessMessage.MODIFY_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                Message.Success.MODIFY_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }
@@ -175,17 +174,17 @@ public class ApiV1PostsController {
     @DeleteMapping(value = "/{id}", consumes = ALL_VALUE)
     @Operation(summary = "글 삭제")
     public RsData<PostDto> deletePost(@PathVariable long id) {
-        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
         PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanDelete()) throw new CustomAccessDeniedException(ErrorMessage.NO_DELETE_PERMISSION.getMessage());
+        if (!permission.isCanDelete()) throw new CustomAccessDeniedException(Message.Error.NO_DELETE_PERMISSION.getMessage());
 
         postService.delete(post);
         PostDto postDto = new PostDto(post, permission);
 
         return RsData.of(
                 "200",
-                SuccessMessage.DELETE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
+                Message.Success.DELETE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
         );
     }

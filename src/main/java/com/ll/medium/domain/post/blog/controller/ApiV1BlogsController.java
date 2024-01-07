@@ -7,8 +7,7 @@ import com.ll.medium.domain.post.post.dto.PostPermissionDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.app.AppConfig;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.exception.CustomAccessDeniedException;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
@@ -46,7 +45,7 @@ public class ApiV1BlogsController {
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page
     ) {
-        Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.MEMBER_NOT_FOUND.getMessage()));
+        Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(Message.Error.MEMBER_NOT_FOUND.getMessage()));
 
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(member.getId(), pageable);
@@ -55,7 +54,7 @@ public class ApiV1BlogsController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername()),
+                Message.Success.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername()),
                 new PageDto<>(pagePosts)
         );
     }
@@ -75,17 +74,17 @@ public class ApiV1BlogsController {
             @PathVariable String username,
             @PathVariable long id
     ) {
-        Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.MEMBER_NOT_FOUND.getMessage()));
-        Post post = postService.findByIdAndAuthorId(id, member.getId()).orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND.getMessage()));
+        Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(Message.Error.MEMBER_NOT_FOUND.getMessage()));
+        Post post = postService.findByIdAndAuthorId(id, member.getId()).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
         PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(ErrorMessage.NO_ACCESS.getMessage());
+        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
 
         PostDto postDto = new PostDto(post, permission);
 
         return RsData.of(
                 "200",
-                SuccessMessage.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername(), post.getId()),
+                Message.Success.GET_POST_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername(), post.getId()),
                 postDto
         );
     }

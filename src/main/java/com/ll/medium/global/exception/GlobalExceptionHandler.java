@@ -1,6 +1,6 @@
 package com.ll.medium.global.exception;
 
-import com.ll.medium.global.common.ErrorMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.rsData.RsData;
 import com.ll.medium.standard.base.Empty;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(RsData.of(
                         "403",
-                        ErrorMessage.NOT_LOGGED_IN.getMessage()
+                        Message.Error.NOT_LOGGED_IN.getMessage()
                 ));
     }
 }

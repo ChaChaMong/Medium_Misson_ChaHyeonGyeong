@@ -2,8 +2,7 @@ package com.ll.medium.domain.member.member.controller;
 
 import com.ll.medium.domain.member.member.dto.LoginRequestDto;
 import com.ll.medium.domain.member.member.service.MemberService;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.rq.Rq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +37,11 @@ public class MemberController {
     @PostMapping("/join")
     String join(@Valid LoginRequestDto loginRequestDto){
         if (memberService.existsByUsername(loginRequestDto.getUsername())) {
-            return rq.historyBack(ErrorMessage.EXIST_USERNAME.getMessage());
+            return rq.historyBack(Message.Error.EXIST_USERNAME.getMessage());
         }
 
         memberService.join(loginRequestDto.getUsername(), loginRequestDto.getPassword());
 
-        return rq.redirect("/member/login", SuccessMessage.JOIN_SUCCESS.getMessage());
+        return rq.redirect("/member/login", Message.Success.JOIN_SUCCESS.getMessage());
     }
 }

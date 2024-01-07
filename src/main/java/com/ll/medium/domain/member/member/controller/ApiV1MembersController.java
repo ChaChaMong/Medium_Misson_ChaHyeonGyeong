@@ -7,8 +7,7 @@ import com.ll.medium.domain.member.member.dto.MemberDto;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.AuthTokenService;
 import com.ll.medium.domain.member.member.service.MemberService;
-import com.ll.medium.global.common.ErrorMessage;
-import com.ll.medium.global.common.SuccessMessage;
+import com.ll.medium.global.common.Message;
 import com.ll.medium.global.exception.ResourceNotFoundException;
 import com.ll.medium.global.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
@@ -43,7 +42,7 @@ public class ApiV1MembersController {
         Optional<Member> memberOp = memberService.findByUsername(loginRequestDto.getUsername());
 
         if (!memberService.checkUsernameAndPassword(memberOp, loginRequestDto.getPassword())) {
-            throw new ResourceNotFoundException(ErrorMessage.LOGIN_FAIL.getMessage());
+            throw new ResourceNotFoundException(Message.Error.LOGIN_FAIL.getMessage());
         }
 
         Member member = memberOp.get();
@@ -56,7 +55,7 @@ public class ApiV1MembersController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.LOGIN_SUCCESS.getMessage(),
+                Message.Success.LOGIN_SUCCESS.getMessage(),
                 new LoginResponseDto(member, refreshToken, accessToken)
         );
     }
@@ -67,18 +66,18 @@ public class ApiV1MembersController {
             @Valid @RequestBody JoinRequestDto joinRequestDto
     ) {
         if (!joinRequestDto.isPasswordConfirm()) {
-            throw new ResourceNotFoundException(ErrorMessage.NOT_MATCH_PASSWORD.getMessage());
+            throw new ResourceNotFoundException(Message.Error.NOT_MATCH_PASSWORD.getMessage());
         }
 
         if (memberService.existsByUsername(joinRequestDto.getUsername())) {
-            throw new ResourceNotFoundException(ErrorMessage.EXIST_USERNAME.getMessage());
+            throw new ResourceNotFoundException(Message.Error.EXIST_USERNAME.getMessage());
         }
 
         Member member = memberService.join(joinRequestDto.getUsername(), joinRequestDto.getPassword());
 
         return RsData.of(
                 "200",
-                SuccessMessage.JOIN_SUCCESS.getMessage(),
+                Message.Success.JOIN_SUCCESS.getMessage(),
                 new MemberDto(member)
         );
     }
@@ -88,7 +87,7 @@ public class ApiV1MembersController {
     public RsData<MemberDto> getMe() {
         return RsData.of(
                 "200",
-                SuccessMessage.GET_MY_PROFILE_SUCCESS.getMessage(),
+                Message.Success.GET_MY_PROFILE_SUCCESS.getMessage(),
                 new MemberDto(rq.getMember())
         );
     }
@@ -100,7 +99,7 @@ public class ApiV1MembersController {
 
         return RsData.of(
                 "200",
-                SuccessMessage.LOGOUT_SUCCESS.getMessage()
+                Message.Success.LOGOUT_SUCCESS.getMessage()
         );
     }
 }
