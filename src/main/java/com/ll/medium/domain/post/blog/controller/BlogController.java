@@ -4,9 +4,12 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.app.AppConfig;
 import com.ll.medium.global.rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +27,9 @@ public class BlogController {
 
     @GetMapping("/{username}")
     public String showListByUsername(Model model, @PathVariable String username, @RequestParam(value="page", defaultValue="0") int page) {
+        Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Member member = memberService.findByUsername(username).get();
-        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(member.getId(), page);
+        Page<Post> posts = postService.findByAuthorIdOrderByIdDesc(member.getId(), pageable);
         model.addAttribute("username", username);
         model.addAttribute("paging", posts);
         model.addAttribute("detailUrl", "/b/%s".formatted(username));

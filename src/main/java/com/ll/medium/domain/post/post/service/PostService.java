@@ -1,11 +1,11 @@
 package com.ll.medium.domain.post.post.service;
 
 import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.post.post.dto.PostControlPermissionDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +27,20 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
-    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<Post> findByIsPublishedOrderByIdDesc(boolean isPublished, Pageable pageable) {
         return postRepository.findByIsPublishedOrderByIdDesc(isPublished, pageable);
     }
 
-    public Page<Post> findByAuthorIdOrderByIdDesc(long authorId, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<Post> findByAuthorIdOrderByIdDesc(long authorId, Pageable pageable) {
         return postRepository.findByAuthorIdOrderByIdDesc(authorId, pageable);
     }
 
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
+    }
+
+    public Optional<Post> findByIdAndAuthorId(long id, long authorId) {
+        return postRepository.findByIdAndAuthorId(id, authorId);
     }
 
     @Transactional
@@ -89,5 +91,17 @@ public class PostService {
         if (author.isAdmin()) return true;
 
         return post.getAuthor().equals(author);
+    }
+
+    @Transactional
+    public void setIsPaid(Post post, boolean isPaid) {
+        post.setPaid(isPaid);
+    }
+
+    public PostControlPermissionDto getContolPermissions(Member author, Post post) {
+        return new PostControlPermissionDto(
+                canModify(author, post),
+                canDelete(author, post)
+        );
     }
 }

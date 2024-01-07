@@ -1,3 +1,5 @@
+server:
+  port: 8090
 spring:
   profiles:
     active: dev
@@ -6,6 +8,9 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
   mvc:
     hidden-method:
       filter:
@@ -35,9 +40,24 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
+  dev:
+    cookieDomain: localhost
+    frontUrl: "http://${custom.dev.cookieDomain}:5173"
+    backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
+  production:
+    cookieDomain: medium.oa.gg
+    frontUrl: "https://${custom.production.cookieDomain}"
+    backUrl: "https://api.${custom.production.cookieDomain}"
   site:
+    cookieDomain: "${custom.dev.cookieDomain}"
+    frontUrl: "${custom.dev.frontUrl}"
+    backUrl: "${custom.dev.backUrl}"
     name: medium
-    baseUrl: "http://localhost:${server.port}"
-  tempDirPath: d:/temp/medium_dev/temp
+  jwt:
+    secretKey: ON_SECRET
+  accessToken:
+    expirationSec: '#{60*60}'
+  temp:
+    dirPath: d:/temp/medium_dev/temp
   genFile:
     dirPath: d:/temp/medium_dev

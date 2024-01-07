@@ -1,54 +1,60 @@
 package com.ll.medium.global.security;
 
-import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
+import com.ll.medium.global.rq.Rq;
+import com.ll.medium.global.rsData.RsData;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final MemberService memberService;
-    private final PasswordEncoder passwordEncoder;
+    private final Rq rq;
 
     @Override
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        String username = request.getHeader("username");
-        String password = request.getHeader("password");
+        if (!request.getRequestURI().startsWith("/api/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        if (username != null && password != null) {
-            Member member = memberService.findByUsername(username).get();
+        String uri = request.getRequestURI();
 
-            if (!passwordEncoder.matches(password, member.getPassword())) {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (uri.matches("/api/.*/members/(login|join)")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String bearerToken = request.getHeader("Authorization");
+
+        if (bearerToken != null) {
+            String refreshToken = bearerToken.substring("Bearer ".length());
+            RsData<String> rs = memberService.refreshAccessToken(refreshToken);
+            String accessToken = rs.getData();
+            SecurityUser securityUser = memberService.getUserFromAccessToken(accessToken);
+            rq.setLogin(securityUser);
+        } else {
+            String accessToken = rq.getCookieValue("accessToken", "");
+
+            if (!accessToken.isBlank()) {
+                if (!memberService.validateToken(accessToken)) {
+                    String refreshToken = rq.getCookieValue("refreshToken", "");
+
+                    RsData<String> rs = memberService.refreshAccessToken(refreshToken);
+                    accessToken = rs.getData();
+                    rq.setCrossDomainCookie("accessToken", accessToken);
+                }
+
+                SecurityUser securityUser = memberService.getUserFromAccessToken(accessToken);
+                rq.setLogin(securityUser);
             }
-
-            User user = new User(
-                    member.getUsername(),
-                    member.getPassword(),
-                    List.of()
-            );
-
-            Authentication auth = new UsernamePasswordAuthenticationToken(
-                    user,
-                    user.getPassword(),
-                    user.getAuthorities()
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);
