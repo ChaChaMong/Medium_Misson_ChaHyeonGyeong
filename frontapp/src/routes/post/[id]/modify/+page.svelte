@@ -25,7 +25,7 @@
 		if (data) {
 			post = data.data;
 		} else {
-			rq.goBack();
+			//rq.goBack();
 			rq.msgError(error.msg);
 		}
 	});
