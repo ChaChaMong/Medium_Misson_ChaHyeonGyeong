@@ -3,7 +3,7 @@
 </script>
 
 {#if postPage != null}
-	<div class="join w-full flex justify-center mt-1">
+	<div class="w-full flex justify-center mt-1 {postPage.totalElementsCount > 1 ? 'join' : ''}">
 		{#if postPage.hasPrevious}
 			<a class="join-item btn btn-sm" href={`?page=${postPage.number - 1}`}>
 				<span>이전</span>
@@ -26,7 +26,5 @@
 				<span>다음</span>
 			</a>
 		{/if}
-
-		<!-- TODO: 게시글 page가 1개인 경우 구현 필요-->
 	</div>
 {/if}
