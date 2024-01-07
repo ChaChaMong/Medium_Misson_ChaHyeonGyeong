@@ -56,8 +56,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.content[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].body", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.content[0].permission", notNullValue()));
+                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -84,8 +83,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.content[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].body", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.content[0].permission", notNullValue()));
+                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -128,8 +126,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
                 .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -156,8 +153,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
                 .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -236,8 +232,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
                 .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
 
         Post post = postService.findById(1L).orElse(null);
         assertThat(post).isNull();
@@ -267,8 +262,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
                 .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
 
         Post post = postService.findById(1L).orElse(null);
         assertThat(post).isNull();
@@ -343,8 +337,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", is("제목1-수정")))
                 .andExpect(jsonPath("$.data.body", is("내용1-수정")))
                 .andExpect(jsonPath("$.data.published", is(false)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -436,8 +429,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", is("제목-등록")))
                 .andExpect(jsonPath("$.data.body", is("내용-등록")))
                 .andExpect(jsonPath("$.data.published", is(true)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
     }
 
 
@@ -492,7 +484,6 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data[0].body", notNullValue()))
                 .andExpect(jsonPath("$.data[0].published", instanceOf(Boolean.class)))
                 .andExpect(jsonPath("$.data[0].paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data[0].permission", notNullValue()))
                 .andExpect(jsonPath("$.data.length()", is(30)));
     }
 
@@ -521,8 +512,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
                 .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
-                .andExpect(jsonPath("$.data.permission", notNullValue()));
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)));
     }
 
     @Test
@@ -576,5 +566,109 @@ public class ApiV1PostsControllerTest {
                 .andExpect(handler().methodName("showModify"))
                 .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/permission - 200 공개글 (비로그인)")
+    void t8_1() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/permission"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPostPermission"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.data.canAccess", is(true)))
+                .andExpect(jsonPath("$.data.canModify", is(false)))
+                .andExpect(jsonPath("$.data.canDelete", is(false)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/permission - 200 공개글 (로그인)")
+    @WithUserDetails("user1")
+    void t8_2() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/permission"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPostPermission"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.data.canAccess", is(true)))
+                .andExpect(jsonPath("$.data.canModify", is(true)))
+                .andExpect(jsonPath("$.data.canDelete", is(true)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/1/permission - 200 공개글 (권한 없는 로그인)")
+    @WithUserDetails("user2")
+    void t8_3() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/1/permission"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPostPermission"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.data.canAccess", is(true)))
+                .andExpect(jsonPath("$.data.canModify", is(false)))
+                .andExpect(jsonPath("$.data.canDelete", is(false)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/11/permission - 200 비공개글 (로그인)")
+    @WithUserDetails("user1")
+    void t8_4() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/11/permission"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPostPermission"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(11))))
+                .andExpect(jsonPath("$.data.canAccess", is(true)))
+                .andExpect(jsonPath("$.data.canModify", is(true)))
+                .andExpect(jsonPath("$.data.canDelete", is(true)));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/11/permission - 200 비공개글 (권한 없는 로그인)")
+    @WithUserDetails("user2")
+    void t8_5() throws Exception {
+        // When
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/posts/11/permission"))
+                .andDo(print());
+
+        //Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1PostsController.class))
+                .andExpect(handler().methodName("getPostPermission"))
+                .andExpect(jsonPath("$.resultCode", is("200")))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(11))))
+                .andExpect(jsonPath("$.data.canAccess", is(false)))
+                .andExpect(jsonPath("$.data.canModify", is(false)))
+                .andExpect(jsonPath("$.data.canDelete", is(false)));
     }
 }
