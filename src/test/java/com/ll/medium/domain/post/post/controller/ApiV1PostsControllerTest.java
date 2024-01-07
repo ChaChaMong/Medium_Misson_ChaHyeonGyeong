@@ -89,7 +89,7 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/myList - 403 (비로그인)")
+    @DisplayName("GET /api/v1/posts/myList - 401 (비로그인)")
     void t1_2() throws Exception {
         //When
         ResultActions resultActions = mvc
@@ -101,7 +101,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("getMyPosts"))
-                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
     }
 
@@ -275,7 +275,7 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE /api/v1/posts/1 - 403 (비로그인)")
+    @DisplayName("DELETE /api/v1/posts/1 - 401 (비로그인)")
     void t3_3() throws Exception {
         //When
         ResultActions resultActions = mvc
@@ -287,7 +287,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("deletePost"))
-                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
     }
 
@@ -348,7 +348,7 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /api/v1/posts/1 - 403 (비로그인)")
+    @DisplayName("PUT /api/v1/posts/1 - 401 (비로그인)")
     void t4_2() throws Exception {
         //When
         ResultActions resultActions = mvc
@@ -370,7 +370,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("modifyPost"))
-                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
     }
 
@@ -442,7 +442,7 @@ public class ApiV1PostsControllerTest {
 
 
     @Test
-    @DisplayName("POST /api/v1/posts - 403 (비로그인)")
+    @DisplayName("POST /api/v1/posts - 401 (비로그인)")
     void t5_2() throws Exception {
         //When
         ResultActions resultActions = mvc
@@ -464,7 +464,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("writePost"))
-                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
     }
 
@@ -562,7 +562,7 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1/modify - 403 (비로그인)")
+    @DisplayName("GET /api/v1/posts/1/modify - 401 (비로그인)")
     void t7_4() throws Exception {
         // When
         ResultActions resultActions = mvc
@@ -574,7 +574,7 @@ public class ApiV1PostsControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
                 .andExpect(handler().methodName("showModify"))
-                .andExpect(jsonPath("$.resultCode", is("403")))
+                .andExpect(jsonPath("$.resultCode", is("401")))
                 .andExpect(jsonPath("$.msg", is(Message.Error.NOT_LOGGED_IN.getMessage())));
     }
 }

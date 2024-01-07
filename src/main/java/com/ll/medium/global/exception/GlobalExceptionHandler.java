@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus
     public ResponseEntity<RsData<Empty>> handleAccessDeniedException(AccessDeniedException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(RsData.of(
-                        "403",
+                        "401",
                         Message.Error.NOT_LOGGED_IN.getMessage()
                 ));
     }
