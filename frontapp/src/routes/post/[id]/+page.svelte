@@ -95,7 +95,7 @@
 				<p class="mb-2">수정 일시 : {formatDate(new Date(post.modifyDate))}</p>
 			</div>
 			<dl class="w-full md:w-2/3 whitespace-pre-line" style="word-break: break-all;">
-				{#if post.paid && !rq.member.paid}
+				{#if post.paid && !rq.member.paid && post.authorId != rq.member.id}
 					<p style="color:orange; font-weight:bold; font-size:large">
 						[이 글은 유료멤버십전용 입니다.]
 					</p>
