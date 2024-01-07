@@ -43,7 +43,7 @@ public class ApiV1PostsController {
     @Operation(summary = "최신 글 리스트")
     public RsData<List<PostDto>> getLatestPosts() {
         List<Post> postEntities = postService.findTop30ByIsPublishedOrderByIdDesc(true);
-        List<PostDto> postDtos = toPostDtoList(postEntities);
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
 
         return RsData.of(
                 "200",
@@ -60,7 +60,7 @@ public class ApiV1PostsController {
     ) {
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByIsPublishedOrderByIdDesc(true, pageable);
-        List<PostDto> postDtos = toPostDtoList(postEntities.getContent());
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
         Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
@@ -78,7 +78,7 @@ public class ApiV1PostsController {
     ) {
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(rq.getMember().getId(), pageable);
-        List<PostDto> postDtos = toPostDtoList(postEntities.getContent());
+        List<PostDto> postDtos = postEntities.stream().map(PostDto::new).toList();
         Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
@@ -88,24 +88,13 @@ public class ApiV1PostsController {
         );
     }
 
-    private List<PostDto> toPostDtoList(List<Post> postEntities) {
-        return postEntities.stream()
-                .map(post -> {
-                    PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-                    return new PostDto(post, permission);
-                })
-                .toList();
-    }
-
     @GetMapping(value = "/{id}", consumes = ALL_VALUE)
     @Operation(summary = "글 상세 조회")
     public RsData<PostDto> getPost(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
+        if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
 
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
-
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
@@ -120,8 +109,7 @@ public class ApiV1PostsController {
     public RsData<PostDto> writePost(@Valid @RequestBody PostRequestDto postRequestDto) {
         Post post = postService.write(rq.getMember(), postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
 
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
@@ -135,11 +123,9 @@ public class ApiV1PostsController {
     @Operation(summary = "수정 화면 글 조회")
     public RsData<PostDto> showModify(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
+        if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
 
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanModify()) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
-
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
@@ -156,12 +142,10 @@ public class ApiV1PostsController {
             @Valid @RequestBody PostRequestDto postRequestDto
     ) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
-
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanModify()) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
+        if (!postService.canModify(rq.getMember(), post)) throw new CustomAccessDeniedException(Message.Error.NO_MODIFY_PERMISSION.getMessage());
 
         postService.modify(post, postRequestDto.getTitle(), postRequestDto.getBody(), postRequestDto.isPublished());
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
@@ -175,17 +159,29 @@ public class ApiV1PostsController {
     @Operation(summary = "글 삭제")
     public RsData<PostDto> deletePost(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
-
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanDelete()) throw new CustomAccessDeniedException(Message.Error.NO_DELETE_PERMISSION.getMessage());
+        if (!postService.canDelete(rq.getMember(), post)) throw new CustomAccessDeniedException(Message.Error.NO_DELETE_PERMISSION.getMessage());
 
         postService.delete(post);
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",
                 Message.Success.DELETE_POST_SUCCESS.getMessage().formatted(postDto.getId()),
                 postDto
+        );
+    }
+
+    @GetMapping(value = "/{id}/permission", consumes = ALL_VALUE)
+    @Operation(summary = "게시글 권한 조회")
+    public RsData<PostPermissionDto> getPostPermission(@PathVariable long id) {
+        Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
+
+        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
+
+        return RsData.of(
+                "200",
+                Message.Success.GET_POST_PERMISSION_SUCCESS.getMessage().formatted(post.getId()),
+                permission
         );
     }
 }

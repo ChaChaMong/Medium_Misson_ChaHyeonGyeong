@@ -6,7 +6,7 @@
 
 	const urlUsername = $page.params.username;
 
-	let postPage: components['schemas']['PageDtoPostDto'] | null = $state(null);
+	let postPage: components['schemas']['PageDtoBlogListDto'] | null = $state(null);
 
 	rq.effect(async () => {
 		const page_ = $page.url.searchParams.get('page') ?? '0';
@@ -63,7 +63,7 @@
 								</span>
 							</td>
 							<td>
-								{#if post.permission.canAccess}
+								{#if post.canAccess}
 									<a href={`${post.authorName}/${post.id}`}>
 										<span class="badge badge-outline">{post.id}</span>
 										<span style="word-break: break-all;">{post.title}</span>

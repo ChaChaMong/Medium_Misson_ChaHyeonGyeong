@@ -29,6 +29,10 @@ export interface paths {
     /** 회원가입 */
     post: operations["join"];
   };
+  "/api/v1/posts/{id}/permission": {
+    /** 게시글 권한 조회 */
+    get: operations["getPostPermission"];
+  };
   "/api/v1/posts/{id}/modify": {
     /** 수정 화면 글 조회 */
     get: operations["showModify"];
@@ -90,14 +94,8 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
-      permission: components["schemas"]["PostPermissionDto"];
       paid: boolean;
       published: boolean;
-    };
-    PostPermissionDto: {
-      canAccess: boolean;
-      canModify: boolean;
-      canDelete: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
@@ -151,6 +149,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    PostPermissionDto: {
+      canAccess: boolean;
+      canModify: boolean;
+      canDelete: boolean;
+    };
+    RsDataPostPermissionDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["PostPermissionDto"];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
+    };
     PageDtoPostDto: {
       /** Format: int64 */
       totalElementsCount: number;
@@ -177,6 +189,43 @@ export interface components {
       resultCode: string;
       msg: string;
       data: components["schemas"]["PostDto"][];
+      /** Format: int32 */
+      statusCode: number;
+      fail: boolean;
+      success: boolean;
+    };
+    BlogListDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      title: string;
+      canAccess: boolean;
+      paid: boolean;
+      published: boolean;
+    };
+    PageDtoBlogListDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["BlogListDto"][];
+      hasPrevious: boolean;
+      hasNext: boolean;
+    };
+    RsDataPageDtoBlogListDto: {
+      resultCode: string;
+      msg: string;
+      data: components["schemas"]["PageDtoBlogListDto"];
       /** Format: int32 */
       statusCode: number;
       fail: boolean;
@@ -350,6 +399,28 @@ export interface operations {
       };
     };
   };
+  /** 게시글 권한 조회 */
+  getPostPermission: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataPostPermissionDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 수정 화면 글 조회 */
   showModify: {
     parameters: {
@@ -464,7 +535,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataPageDtoPostDto"];
+          "application/json": components["schemas"]["RsDataPageDtoBlogListDto"];
         };
       };
       /** @description Internal Server Error */

@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 import java.time.LocalDateTime;
 
 @Getter
-public class PostDto {
+public class BlogListDto {
     @NonNull
     private final Long id;
     @NonNull
@@ -21,21 +21,21 @@ public class PostDto {
     @NonNull
     private final String title;
     @NonNull
-    private final String body;
-    @NonNull
     private final boolean isPublished;
     @NonNull
     private final boolean isPaid;
+    @NonNull
+    private final boolean canAccess;
 
-    public PostDto(Post post) {
+    public BlogListDto(Post post, boolean canAccess) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
         this.modifyDate = post.getModifyDate();
         this.authorId = post.getAuthor().getId();
         this.authorName = post.getAuthor().getUsername();
         this.title  = post.getTitle();
-        this.body = post.getBody();
         this.isPublished = post.isPublished();
         this.isPaid = post.isPaid();
+        this.canAccess = canAccess;
     }
 }

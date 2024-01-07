@@ -3,7 +3,7 @@ package com.ll.medium.domain.post.blog.controller;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.dto.PostDto;
-import com.ll.medium.domain.post.post.dto.PostPermissionDto;
+import com.ll.medium.domain.post.post.dto.BlogListDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.app.AppConfig;
@@ -41,7 +41,7 @@ public class ApiV1BlogsController {
     @GetMapping(value = "/{username}", consumes = ALL_VALUE)
     @SecurityRequirement(name = "none")
     @Operation(summary = "특정 사용자의 글 리스트")
-    public RsData<PageDto<PostDto>> getPostsByUsername(
+    public RsData<PageDto<BlogListDto>> getPostsByUsername(
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page
     ) {
@@ -49,23 +49,16 @@ public class ApiV1BlogsController {
 
         Pageable pageable = PageRequest.of(page, AppConfig.getBasePageSize());
         Page<Post> postEntities = postService.findByAuthorIdOrderByIdDesc(member.getId(), pageable);
-        List<PostDto> postDtos = toPostDtoList(postEntities.getContent());
-        Page<PostDto> pagePosts = new PageImpl<>(postDtos, pageable, postEntities.getTotalElements());
+
+        List<BlogListDto> blogListDtos = postEntities.stream()
+                .map(post -> new BlogListDto(post, postService.canAccess(rq.getMember(), post))).toList();
+        Page<BlogListDto> pagePosts = new PageImpl<>(blogListDtos, pageable, postEntities.getTotalElements());
 
         return RsData.of(
                 "200",
                 Message.Success.GET_POSTS_BY_USERNAME_SUCCESS.getMessage().formatted(member.getUsername()),
                 new PageDto<>(pagePosts)
         );
-    }
-
-    private List<PostDto> toPostDtoList(List<Post> postEntities) {
-        return postEntities.stream()
-                .map(post -> {
-                    PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-                    return new PostDto(post, permission);
-                })
-                .toList();
     }
 
     @GetMapping(value = "/{username}/{id}", consumes = ALL_VALUE)
@@ -76,11 +69,9 @@ public class ApiV1BlogsController {
     ) {
         Member member = memberService.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(Message.Error.MEMBER_NOT_FOUND.getMessage()));
         Post post = postService.findByIdAndAuthorId(id, member.getId()).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
+        if (!postService.canAccess(rq.getMember(), post)) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
 
-        PostPermissionDto permission = postService.getPermissions(rq.getMember(), post);
-        if (!permission.isCanAccess()) throw new CustomAccessDeniedException(Message.Error.NO_ACCESS.getMessage());
-
-        PostDto postDto = new PostDto(post, permission);
+        PostDto postDto = new PostDto(post);
 
         return RsData.of(
                 "200",

@@ -5,13 +5,15 @@
 	import { onMount } from 'svelte';
 	import { formatDate } from '$lib/utils/dateUtils';
 
-	onMount(() => {
-		$page.params.id;
+	onMount(async () => {
+		await getPost();
+		await getPermission();
 	});
 
 	let post: components['schemas']['PostDto'] | null = $state(null);
+	let permission: components['schemas']['PostPermissionDto'] | null = $state(null);
 
-	rq.effect(async () => {
+	async function getPost() {
 		const { data, error } = await rq.apiEndPoints().GET('/api/v1/b/{username}/{id}', {
 			params: {
 				path: {
@@ -24,10 +26,26 @@
 		if (data) {
 			post = data.data;
 		} else {
-			rq.goBack();
+			//rq.goBack();
 			rq.msgError(error.msg);
 		}
-	});
+	}
+
+	async function getPermission() {
+		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/permission', {
+			params: {
+				path: {
+					id: parseInt($page.params.id)
+				}
+			}
+		});
+
+		if (data) {
+			permission = data.data;
+		} else {
+			rq.msgError(error.msg);
+		}
+	}
 
 	async function confirmDelete() {
 		if (confirm('정말로 삭제하시겠습니까?')) {
@@ -91,12 +109,14 @@
 
 	<hr class="mt-2" />
 
-	<div class="mt-2 flex gap-2 justify-center">
-		{#if post.permission.canModify}
-			<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
-		{/if}
-		{#if post.permission.canDelete}
-			<button class="btn btn-error btn-sm" on:click={confirmDelete}>글 삭제</button>
-		{/if}
-	</div>
+	{#if permission}
+		<div class="mt-2 flex gap-2 justify-center">
+			{#if permission.canModify}
+				<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
+			{/if}
+			{#if permission.canDelete}
+				<button class="btn btn-error btn-sm" on:click={confirmDelete}>글 삭제</button>
+			{/if}
+		</div>
+	{/if}
 {/if}
