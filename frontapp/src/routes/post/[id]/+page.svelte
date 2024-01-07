@@ -91,14 +91,11 @@
 	<hr class="mt-2" />
 
 	<div class="mt-2 flex gap-2 justify-center">
-		<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
-		<button class="btn btn-error btn-sm" on:click={confirmDelete}>글 삭제</button>
-		<!-- TODO: 수정, 삭제 조건 api단에서 가져오기 -->
-		<!-- {#if canModify($rq.getMember(), post)}
+		{#if post.permission.canModify}
 			<a href={`/post/${post.id}/modify`} class="btn btn-warning btn-sm">글 수정</a>
-		{/if} -->
-		<!-- {#if canDelete($rq.getMember(), post)}
+		{/if}
+		{#if post.permission.canDelete}
 			<button class="btn btn-error btn-sm" on:click={confirmDelete}>글 삭제</button>
-		{/if} -->
+		{/if}
 	</div>
 {/if}

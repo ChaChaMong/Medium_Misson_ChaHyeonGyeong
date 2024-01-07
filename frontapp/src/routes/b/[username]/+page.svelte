@@ -63,13 +63,17 @@
 								</span>
 							</td>
 							<td>
-								<a href={`${post.authorName}/${post.id}`}>
+								{#if post.permission.canAccess}
+									<a href={`${post.authorName}/${post.id}`}>
+										<span class="badge badge-outline">{post.id}</span>
+										<span style="word-break: break-all;">{post.title}</span>
+									</a>
+									{#if post.paid}
+										<i class="fa-solid fa-coins" style="color:orange;"></i>
+									{/if}
+								{:else}
 									<span class="badge badge-outline">{post.id}</span>
-									<span style="word-break: break-all;">{post.title}</span>
-								</a>
-
-								{#if post.paid}
-									<i class="fa-solid fa-coins" style="color:orange;"></i>
+									<span style="word-break: break-all;">비공개 게시물 입니다.</span>
 								{/if}
 							</td>
 							<td

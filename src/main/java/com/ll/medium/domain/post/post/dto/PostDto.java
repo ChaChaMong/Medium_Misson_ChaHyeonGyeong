@@ -26,8 +26,10 @@ public class PostDto {
     private final boolean isPublished;
     @NonNull
     private final boolean isPaid;
+    @NonNull
+    private final PostPermissionDto permission;
 
-    public PostDto(Post post) {
+    public PostDto(Post post, PostPermissionDto permission) {
         this.id = post.getId();
         this.createDate = post.getCreateDate();
         this.modifyDate = post.getModifyDate();
@@ -37,5 +39,6 @@ public class PostDto {
         this.body = post.getBody();
         this.isPublished = post.isPublished();
         this.isPaid = post.isPaid();
+        this.permission = permission;
     }
 }

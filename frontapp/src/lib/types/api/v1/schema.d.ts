@@ -90,8 +90,14 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
-      published: boolean;
+      permission: components["schemas"]["PostPermissionDto"];
       paid: boolean;
+      published: boolean;
+    };
+    PostPermissionDto: {
+      canAccess: boolean;
+      canModify: boolean;
+      canDelete: boolean;
     };
     RsDataPostDto: {
       resultCode: string;
