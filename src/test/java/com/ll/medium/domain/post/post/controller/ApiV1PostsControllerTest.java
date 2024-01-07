@@ -56,7 +56,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.content[0].authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].body", notNullValue()))
-                .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.content[0].permission", notNullValue()));
     }
 
     @Test
@@ -82,7 +84,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.content[0].authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data.content[0].body", notNullValue()))
-                .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.content[0].published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.content[0].paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.content[0].permission", notNullValue()));
     }
 
     @Test
@@ -124,7 +128,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
-                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
     }
 
     @Test
@@ -150,7 +156,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
-                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
     }
 
     @Test
@@ -228,7 +236,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
-                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
 
         Post post = postService.findById(1L).orElse(null);
         assertThat(post).isNull();
@@ -257,7 +267,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
-                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
 
         Post post = postService.findById(1L).orElse(null);
         assertThat(post).isNull();
@@ -331,7 +343,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", is("제목1-수정")))
                 .andExpect(jsonPath("$.data.body", is("내용1-수정")))
-                .andExpect(jsonPath("$.data.published", is(false)));
+                .andExpect(jsonPath("$.data.published", is(false)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
     }
 
     @Test
@@ -422,7 +436,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", is("제목-등록")))
                 .andExpect(jsonPath("$.data.body", is("내용-등록")))
-                .andExpect(jsonPath("$.data.published", is(true)));
+                .andExpect(jsonPath("$.data.published", is(true)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
     }
 
 
@@ -476,6 +492,8 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data[0].body", notNullValue()))
                 .andExpect(jsonPath("$.data[0].published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data[0].paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data[0].permission", notNullValue()))
                 .andExpect(jsonPath("$.data.length()", is(30)));
     }
 
@@ -503,7 +521,9 @@ public class ApiV1PostsControllerTest {
                 .andExpect(jsonPath("$.data.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.title", notNullValue()))
                 .andExpect(jsonPath("$.data.body", notNullValue()))
-                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)));
+                .andExpect(jsonPath("$.data.published", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.paid", instanceOf(Boolean.class)))
+                .andExpect(jsonPath("$.data.permission", notNullValue()));
     }
 
     @Test
