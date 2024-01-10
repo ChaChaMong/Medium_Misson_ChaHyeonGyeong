@@ -2,7 +2,7 @@ package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.dto.PostDto;
 import com.ll.medium.domain.post.post.dto.PostListDto;
-import com.ll.medium.domain.post.post.dto.PostControlPermissionDto;
+import com.ll.medium.domain.post.post.dto.PostPermissionDto;
 import com.ll.medium.domain.post.post.dto.PostRequestDto;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
@@ -172,12 +172,16 @@ public class ApiV1PostsController {
         );
     }
 
-    @GetMapping(value = "/{id}/controlPermission", consumes = ALL_VALUE)
-    @Operation(summary = "게시글 제어 권한 조회")
-    public RsData<PostControlPermissionDto> getControlPermission(@PathVariable long id) {
+    @GetMapping(value = "/{id}/postPermission", consumes = ALL_VALUE)
+    @Operation(summary = "게시글 권한 조회")
+    public RsData<PostPermissionDto> getPostPermission(@PathVariable long id) {
         Post post = postService.findById(id).orElseThrow(() -> new ResourceNotFoundException(Message.Error.POST_NOT_FOUND.getMessage()));
 
-        PostControlPermissionDto permission = postService.getContolPermissions(rq.getMember(), post);
+        PostPermissionDto permission = new PostPermissionDto(
+                postService.canAccessContent(rq.getMember(), post),
+                postService.canModify(rq.getMember(), post),
+                postService.canDelete(rq.getMember(), post)
+        );
 
         return RsData.of(
                 "200",

@@ -11,7 +11,7 @@
 	});
 
 	let post: components['schemas']['PostDto'] | null = $state(null);
-	let permission: components['schemas']['PostControlPermissionDto'] | null = $state(null);
+	let permission: components['schemas']['PostPermissionDto'] | null = $state(null);
 
 	async function getPost() {
 		const { data, error } = await rq.apiEndPoints().GET('/api/v1/b/{username}/{id}', {
@@ -32,7 +32,7 @@
 	}
 
 	async function getPermission() {
-		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/controlPermission', {
+		const { data, error } = await rq.apiEndPoints().GET('/api/v1/posts/{id}/postPermission', {
 			params: {
 				path: {
 					id: parseInt($page.params.id)
@@ -96,12 +96,12 @@
 				<p class="mb-2">수정 일시 : {formatDate(new Date(post.modifyDate))}</p>
 			</div>
 			<dl class="w-full md:w-2/3 whitespace-pre-line" style="word-break: break-all;">
-				{#if post.paid && !rq.member.paid && post.authorId != rq.member.id}
+				{#if permission?.canAccessContent}
+					{post.body}
+				{:else}
 					<p style="color:orange; font-weight:bold; font-size:large">
 						[이 글은 유료멤버십전용 입니다.]
 					</p>
-				{:else}
-					{post.body}
 				{/if}
 			</dl>
 		</div>

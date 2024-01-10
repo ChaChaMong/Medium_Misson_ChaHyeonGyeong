@@ -29,13 +29,13 @@ export interface paths {
     /** 회원가입 */
     post: operations["join"];
   };
+  "/api/v1/posts/{id}/postPermission": {
+    /** 게시글 권한 조회 */
+    get: operations["getPostPermission"];
+  };
   "/api/v1/posts/{id}/modify": {
     /** 수정 화면 글 조회 */
     get: operations["showModify"];
-  };
-  "/api/v1/posts/{id}/controlPermission": {
-    /** 게시글 제어 권한 조회 */
-    get: operations["getControlPermission"];
   };
   "/api/v1/posts/myList": {
     /** 내 글 리스트 */
@@ -149,14 +149,15 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
-    PostControlPermissionDto: {
+    PostPermissionDto: {
+      canAccessContent: boolean;
       canModify: boolean;
       canDelete: boolean;
     };
-    RsDataPostControlPermissionDto: {
+    RsDataPostPermissionDto: {
       resultCode: string;
       msg: string;
-      data: components["schemas"]["PostControlPermissionDto"];
+      data: components["schemas"]["PostPermissionDto"];
       /** Format: int32 */
       statusCode: number;
       fail: boolean;
@@ -400,6 +401,28 @@ export interface operations {
       };
     };
   };
+  /** 게시글 권한 조회 */
+  getPostPermission: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataPostPermissionDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 수정 화면 글 조회 */
   showModify: {
     parameters: {
@@ -412,28 +435,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataPostDto"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
-  /** 게시글 제어 권한 조회 */
-  getControlPermission: {
-    parameters: {
-      path: {
-        id: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["RsDataPostControlPermissionDto"];
         };
       };
       /** @description Internal Server Error */

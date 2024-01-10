@@ -557,60 +557,63 @@ public class ApiV1PostsControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1/controlPermission - 200 공개글 (비로그인)")
+    @DisplayName("GET /api/v1/posts/2/postPermission - 200 공개유료글 (비로그인)")
     void t8_1() throws Exception {
         // When
         ResultActions resultActions = mvc
-                .perform(get("/api/v1/posts/1/controlPermission"))
+                .perform(get("/api/v1/posts/2/postPermission"))
                 .andDo(print());
 
         //Then
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
-                .andExpect(handler().methodName("getControlPermission"))
+                .andExpect(handler().methodName("getPostPermission"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(2))))
+                .andExpect(jsonPath("$.data.canAccessContent", is(false)))
                 .andExpect(jsonPath("$.data.canModify", is(false)))
                 .andExpect(jsonPath("$.data.canDelete", is(false)));
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1/controlPermission - 200 공개글 (로그인)")
+    @DisplayName("GET /api/v1/posts/2/postPermission - 200 공개유료글 (로그인)")
     @WithUserDetails("user1")
     void t8_2() throws Exception {
         // When
         ResultActions resultActions = mvc
-                .perform(get("/api/v1/posts/1/controlPermission"))
+                .perform(get("/api/v1/posts/2/postPermission"))
                 .andDo(print());
 
         //Then
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
-                .andExpect(handler().methodName("getControlPermission"))
+                .andExpect(handler().methodName("getPostPermission"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(2))))
+                .andExpect(jsonPath("$.data.canAccessContent", is(true)))
                 .andExpect(jsonPath("$.data.canModify", is(true)))
                 .andExpect(jsonPath("$.data.canDelete", is(true)));
     }
 
     @Test
-    @DisplayName("GET /api/v1/posts/1/controlPermission - 200 공개글 (권한 없는 로그인)")
+    @DisplayName("GET /api/v1/posts/2/postPermission - 200 공개유료글 (권한 없는 로그인)")
     @WithUserDetails("user2")
     void t8_3() throws Exception {
         // When
         ResultActions resultActions = mvc
-                .perform(get("/api/v1/posts/1/controlPermission"))
+                .perform(get("/api/v1/posts/2/postPermission"))
                 .andDo(print());
 
         //Then
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1PostsController.class))
-                .andExpect(handler().methodName("getControlPermission"))
+                .andExpect(handler().methodName("getPostPermission"))
                 .andExpect(jsonPath("$.resultCode", is("200")))
-                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(1))))
+                .andExpect(jsonPath("$.msg", is(Message.Success.GET_CONTROL_PERMISSION_SUCCESS.getMessage().formatted(2))))
+                .andExpect(jsonPath("$.data.canAccessContent", is(false)))
                 .andExpect(jsonPath("$.data.canModify", is(false)))
                 .andExpect(jsonPath("$.data.canDelete", is(false)));
     }
